@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- 
+Author: @tweathers-sec 
+Copyright: @tweathers-sec and Mayweather Group LLC 
+-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>doppelgänger RFID</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+</head>
+
+<header>
+    <nav>
+        <ul class="navigation">
+            <li><a href="./index.html">Home</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <main>
+        <form class="configForm">
+            <div class="button-container">
+                <button class="inner" type="button" onclick="eraseCards()">Erase Stored Card Data</button>
+            </div>
+            <div class="button-container">
+                <button class="inner" type="button" onclick="resetCard()">Restore WiFi Reset Card</button>
+            </div>
+            <div class="button-container">
+                <button class="inner" type="button" onclick="resetWireless()">Reset Wireless Creds</button>
+            </div>
+            <div class="button-container">
+                <button class="inner" type="button" onclick="resetGPIO()">Reset GPIO Settings</button>
+            </div>
+            <div class="button-container">
+                <button class="inner" type="button" onclick="restoreNotificationsConfig()">Reset Notification
+                    Settings</button>
+            </div>
+            <div class="button-container">
+                <button class="inner" type="button" onclick="fullReset()">Full Device Reset</button>
+            </div>
+        </form>
+        <br>
+        <script src="js/device.js"></script>
+        <script src="js/theme.js"></script>
+        <script src="js/gpio_reset.js"></script>
+    </main>
+</body>
+
+<footer class="footer">
+    <img class="theme-logo" src="img/doppelganger_dm.png" alt="doppelganger rfid"
+        onclick="location.href='https://physicalexploit.com/docs/products/getting-started/';">
+</footer>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- 
+Stealth Firmware Version: 1.2 (June 11, 2024)
+Author: @tweathers-sec 
+Copyright: @tweathers-sec and Mayweather Group LLC 
+-->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>doppelgänger RFID</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+</head>
+
+<body>
+  <ul class="navigation">
+    <li><a href="./config.html">Configuration</a></li>
+    <li><a href="./reset.html">Reset</a></li>
+    <li><a href="./cards.csv">Download CSV</a></li>
+    <li><a href="#" onclick="window.location.reload(); return false;">Reload</a></li>
+  </ul>
+
+  <div class="wrapper">
+    <table class="content-table">
+      <tr>
+        <th class="content-head" data-column="BL" data-order="desc">
+          Bit Length
+        </th>
+        <th class="content-head" data-column="FC" data-order="desc">
+          Facility Code
+        </th>
+        <th class="content-head" data-column="CN" data-order="desc">
+          Card Number
+        </th>
+      </tr>
+      <tbody id="cardTable"></tbody>
+    </table>
+  </div>
+
+  <footer class="footer">
+    <img class="theme-logo" src="img/doppelganger_dm.png" alt="doppelganger rfid"
+      onclick="location.href='https://physicalexploit.com/docs/products/getting-started/';">
+  </footer>
+
+  <script src="js/sort.js"></script>
+  <script src="js/theme.js"></script>
+</body>
+
+</html>

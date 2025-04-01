@@ -1,0 +1,394 @@
+/* themes.css - Theme-specific variables and style overrides */
+
+/* Theme Variables */
+:root {
+  /* Base theme variables */
+  --aw-color-primary: #00A3B9;
+  --aw-color-secondary: #00C2DB;
+  --aw-color-accent: #007A8C;
+  --aw-color-text-default: #1A1A1A;
+  --aw-color-text-muted: #666666;
+  --aw-color-bg-page: #F2F2F2;
+  --aw-color-bg-page-dark: #121212;
+  --aw-font-sans: 'Inter', system-ui;
+  --aw-font-serif: ui-serif;
+  --aw-font-heading: 'Inter', system-ui;
+  
+  /* Neon colors */
+  --neon-green: #00FF9C;
+  --neon-blue: #00C3FF;
+  --neon-purple: #9D00FF;
+
+  /* Classic Doppelganger colors */
+  --classic-blue: #0057B8;
+  --classic-yellow: #FFB500;
+  --classic-gray: #333333;
+  --classic-light-blue: #7BAFD4;
+  --classic-dark-gray: #414042;
+  --classic-light-gray: #f3f3f3;
+  
+  /* Nord theme colors */
+  --nord-polar-night-1: #2E3440;
+  --nord-polar-night-2: #3B4252;
+  --nord-polar-night-3: #434C5E;
+  --nord-polar-night-4: #4C566A;
+  --nord-snow-storm-1: #D8DEE9;
+  --nord-snow-storm-2: #E5E9F0;
+  --nord-snow-storm-3: #ECEFF4;
+  --nord-frost-1: #8FBCBB;
+  --nord-frost-2: #88C0D0;
+  --nord-frost-3: #81A1C1;
+  --nord-frost-4: #5E81AC;
+  --nord-aurora-red: #BF616A;
+  --nord-aurora-orange: #D08770;
+  --nord-aurora-yellow: #EBCB8B;
+  --nord-aurora-green: #A3BE8C;
+  --nord-aurora-purple: #B48EAD;
+  
+  /* Monokai theme colors */
+  --monokai-background: #272822;
+  --monokai-lighter: #3E3D32;
+  --monokai-foreground: #F8F8F2;
+  --monokai-comment: #75715E;
+  --monokai-red: #F92672;
+  --monokai-orange: #FD971F;
+  --monokai-yellow: #E6DB74;
+  --monokai-green: #A6E22E;
+  --monokai-blue: #66D9EF;
+  --monokai-purple: #AE81FF;
+  
+  /* GitHub theme colors */
+  --github-white: #FFFFFF;
+  --github-gray-50: #F6F8FA;
+  --github-gray-100: #EAEEF2;
+  --github-gray-200: #D0D7DE;
+  --github-gray-300: #AFB8C1;
+  --github-gray-400: #8C959F;
+  --github-gray-500: #6E7781;
+  --github-gray-600: #57606A;
+  --github-gray-700: #424A53;
+  --github-gray-800: #32383F;
+  --github-gray-900: #24292F;
+  --github-blue: #0969DA;
+  --github-blue-light: #218BFF;
+  --github-green: #2DA44E;
+  --github-red: #CF222E;
+  --github-orange: #BC4C00;
+  --github-purple: #8250DF;
+  
+  /* GitHub Dark theme colors */
+  --github-dark-bg: #0D1117;
+  --github-dark-secondary: #161B22;
+  --github-dark-tertiary: #21262D;
+  --github-dark-border: #30363D;
+  --github-dark-text: #C9D1D9;
+  --github-dark-text-secondary: #8B949E;
+  --github-dark-blue: #58A6FF;
+  --github-dark-blue-secondary: #1F6FEB;
+  --github-dark-green: #3FB950;
+  --github-dark-red: #F85149;
+  --github-dark-orange: #DB6D28;
+  --github-dark-purple: #A371F7;
+  
+  /* Dracula theme colors */
+  --dracula-background: #282A36;
+  --dracula-current-line: #44475A;
+  --dracula-selection: #44475A;
+  --dracula-foreground: #F8F8F2;
+  --dracula-comment: #6272A4;
+  --dracula-cyan: #8BE9FD;
+  --dracula-green: #50FA7B;
+  --dracula-orange: #FFB86C;
+  --dracula-pink: #FF79C6;
+  --dracula-purple: #BD93F9;
+  --dracula-red: #FF5555;
+  --dracula-yellow: #F1FA8C;
+  
+  /* Default theme (light) variables */
+  --bg-primary: var(--aw-color-bg-page);
+  --bg-secondary: #E5E5E5;
+  --bg-tertiary: #D8D8D8;
+  --bg-header: #CCCCCC;
+  --bg-nav: #C5C5C5;
+  --nav-hover: #B8B8B8;
+  --text-primary: var(--aw-color-text-default);
+  --text-secondary: var(--aw-color-text-muted);
+  --border-color: #B0B0B0;
+  --accent-color: var(--aw-color-primary);
+  --accent-hover: var(--aw-color-secondary);
+  --accent-muted: var(--aw-color-accent);
+  --shadow-color: rgba(0, 109, 125, 0.15);
+  --border-subtle: #BFBFBF;
+  --nav-border-top: rgba(0, 0, 0, 0.1);
+  --nav-border-bottom: rgba(0, 0, 0, 0.05);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: light;
+}
+
+/* Dark Theme */
+:root[data-theme="dark"] {
+  --bg-primary: var(--aw-color-bg-page-dark);
+  --bg-secondary: #1A1A1A;
+  --bg-tertiary: #252525;
+  --bg-header: #2D2D2D;
+  --bg-nav: var(--bg-secondary);
+  --nav-hover: #2A2A2A;
+  --text-primary: #E0E0E0;
+  --text-secondary: #CCCCCC;
+  --border-color: #404040;
+  --accent-color: var(--aw-color-primary);
+  --accent-hover: var(--aw-color-secondary);
+  --accent-muted: var(--aw-color-accent);
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --border-subtle: #333333;
+  --nav-border-top: rgba(255, 255, 255, 0.1);
+  --nav-border-bottom: rgba(0, 0, 0, 0.1);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: dark;
+}
+
+/* Light Theme */
+:root[data-theme="light"] {
+  --bg-primary: var(--aw-color-bg-page);
+  --bg-secondary: #E5E5E5;
+  --bg-tertiary: #D8D8D8;
+  --bg-header: #CCCCCC;
+  --bg-nav: #C5C5C5;
+  --nav-hover: #B8B8B8;
+  --text-primary: var(--aw-color-text-default);
+  --text-secondary: var(--aw-color-text-muted);
+  --border-color: #B0B0B0;
+  --accent-color: var(--aw-color-primary);
+  --accent-hover: var(--aw-color-secondary);
+  --accent-muted: var(--aw-color-accent);
+  --shadow-color: rgba(0, 109, 125, 0.15);
+  --border-subtle: #BFBFBF;
+  --nav-border-top: rgba(0, 0, 0, 0.1);
+  --nav-border-bottom: rgba(0, 0, 0, 0.05);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: light;
+}
+
+/* Not Tron Theme */
+:root[data-theme="not-tron"] {
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #121212;
+  --bg-tertiary: #1A1A1A;
+  --bg-header: #2A2A2A;
+  --bg-nav: var(--bg-secondary);
+  --nav-hover: #2A2A2A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E0E0E0;
+  --border-color: var(--neon-purple);
+  --accent-color: var(--neon-blue);
+  --accent-hover: var(--neon-green);
+  --accent-muted: var(--neon-purple);
+  --shadow-color: rgba(0, 195, 255, 0.2);
+  --border-subtle: #333333;
+  --nav-border-top: rgba(0, 195, 255, 0.1);
+  --nav-border-bottom: rgba(0, 0, 0, 0.1);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: dark;
+}
+
+/* Classic Theme */
+:root[data-theme="classic"] {
+  --bg-primary: white;
+  --bg-secondary: var(--classic-light-gray);
+  --bg-tertiary: white;
+  --bg-header: var(--classic-gray);
+  --bg-nav: var(--classic-gray);
+  --nav-hover: var(--classic-yellow);
+  --text-primary: black;
+  --text-secondary: #666666;
+  --border-color: var(--classic-light-blue);
+  --accent-color: var(--classic-blue);
+  --accent-hover: var(--classic-yellow);
+  --accent-muted: var(--classic-light-blue);
+  --shadow-color: rgba(0, 87, 184, 0.15);
+  --border-subtle: var(--classic-dark-gray);
+  --nav-border-top: rgba(255, 255, 255, 0.3);
+  --nav-border-bottom: rgba(0, 0, 0, 0.1);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: light;
+  background-color: white;
+}
+
+/* ARROW Theme */
+:root[data-theme="arrow"] {
+  --bg-primary: #f9f9f9;
+  --bg-secondary: #efefef;
+  --bg-tertiary: #fcfcfc;
+  --bg-header: #f0f0f0;
+  --bg-nav: #eeeeee;
+  --nav-hover: #e8e8e8;
+  --text-primary: #202020;
+  --text-secondary: #646464;
+  --border-color: #d8d8d8;
+  --accent-color: #e25822;
+  --accent-hover: #ff6d3d;
+  --accent-muted: #bf4919;
+  --shadow-color: rgba(226, 88, 34, 0.15);
+  --border-subtle: #e0e0e0;
+  --nav-border-top: rgba(0, 0, 0, 0.05);
+  --nav-border-bottom: rgba(0, 0, 0, 0.02);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: light;
+}
+
+/* ARROW Dark Theme */
+:root[data-theme="arrow-dark"] {
+  --bg-primary: #0c0e10;
+  --bg-secondary: #1e2329;
+  --bg-tertiary: #131619;
+  --bg-header: #242a31;
+  --bg-nav: var(--bg-secondary);
+  --nav-hover: #2d333b;
+  --text-primary: #f0f6fc;
+  --text-secondary: #a9b6c9;
+  --border-color: #2a3037;
+  --accent-color: #e25822;
+  --accent-hover: #ff6d3d;
+  --accent-muted: #bf4919;
+  --shadow-color: rgba(226, 88, 34, 0.2);
+  --border-subtle: #313942;
+  --nav-border-top: rgba(255, 255, 255, 0.05);
+  --nav-border-bottom: rgba(0, 0, 0, 0.1);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: dark;
+}
+
+/* Nord Theme */
+:root[data-theme="nord"] {
+  --bg-primary: var(--nord-polar-night-1);
+  --bg-secondary: var(--nord-polar-night-2);
+  --bg-tertiary: var(--nord-polar-night-3);
+  --bg-header: var(--nord-polar-night-4);
+  --bg-nav: var(--nord-polar-night-2);
+  --nav-hover: var(--nord-polar-night-3);
+  --text-primary: var(--nord-snow-storm-3);
+  --text-secondary: var(--nord-snow-storm-1);
+  --border-color: var(--nord-polar-night-4);
+  --accent-color: var(--nord-frost-2);
+  --accent-hover: var(--nord-frost-3);
+  --accent-muted: var(--nord-frost-4);
+  --shadow-color: rgba(46, 52, 64, 0.3);
+  --border-subtle: var(--nord-polar-night-3);
+  --nav-border-top: rgba(216, 222, 233, 0.1);
+  --nav-border-bottom: rgba(46, 52, 64, 0.2);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: dark;
+}
+
+/* Monokai Theme */
+:root[data-theme="monokai"] {
+  --bg-primary: var(--monokai-background);
+  --bg-secondary: var(--monokai-lighter);
+  --bg-tertiary: #33332D;
+  --bg-header: #35352D;
+  --bg-nav: var(--monokai-background);
+  --nav-hover: var(--monokai-lighter);
+  --text-primary: var(--monokai-foreground);
+  --text-secondary: #C0C0C0;
+  --border-color: #4A4A4A;
+  --accent-color: var(--monokai-blue);
+  --accent-hover: var(--monokai-green);
+  --accent-muted: var(--monokai-purple);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --border-subtle: #555550;
+  --nav-border-top: rgba(255, 255, 255, 0.05);
+  --nav-border-bottom: rgba(0, 0, 0, 0.2);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: dark;
+}
+
+/* GitHub Theme */
+:root[data-theme="github"] {
+  --bg-primary: var(--github-white);
+  --bg-secondary: var(--github-gray-50);
+  --bg-tertiary: var(--github-gray-100);
+  --bg-header: var(--github-gray-100);
+  --bg-nav: var(--github-gray-100);
+  --nav-hover: var(--github-gray-200);
+  --text-primary: var(--github-gray-900);
+  --text-secondary: var(--github-gray-600);
+  --border-color: var(--github-gray-200);
+  --accent-color: var(--github-blue);
+  --accent-hover: var(--github-blue-light);
+  --accent-muted: var(--github-purple);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --border-subtle: var(--github-gray-200);
+  --nav-border-top: var(--github-gray-100);
+  --nav-border-bottom: rgba(0, 0, 0, 0.05);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: light;
+  background-color: var(--github-white);
+}
+
+/* Dracula Theme */
+:root[data-theme="dracula"] {
+  --bg-primary: var(--dracula-background);
+  --bg-secondary: var(--dracula-current-line);
+  --bg-tertiary: #353744;
+  --bg-header: #3B3D52;
+  --bg-nav: var(--dracula-background);
+  --nav-hover: var(--dracula-current-line);
+  --text-primary: var(--dracula-foreground);
+  --text-secondary: #BDC0CE;
+  --border-color: var(--dracula-comment);
+  --accent-color: var(--dracula-pink);
+  --accent-hover: var(--dracula-purple);
+  --accent-muted: var(--dracula-cyan);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --border-subtle: var(--dracula-current-line);
+  --nav-border-top: rgba(255, 255, 255, 0.05);
+  --nav-border-bottom: rgba(0, 0, 0, 0.2);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: dark;
+}
+
+/* GitHub Dark Theme */
+:root[data-theme="github-dark"] {
+  --bg-primary: var(--github-dark-bg);
+  --bg-secondary: var(--github-dark-secondary);
+  --bg-tertiary: var(--github-dark-tertiary);
+  --bg-header: #2D333B;
+  --bg-nav: var(--github-dark-secondary);
+  --nav-hover: var(--github-dark-tertiary);
+  --text-primary: var(--github-dark-text);
+  --text-secondary: var(--github-dark-text-secondary);
+  --border-color: var(--github-dark-border);
+  --accent-color: var(--github-dark-blue);
+  --accent-hover: var(--github-dark-blue-secondary);
+  --accent-muted: var(--github-dark-purple);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --border-subtle: var(--github-dark-border);
+  --nav-border-top: rgba(201, 209, 217, 0.05);
+  --nav-border-bottom: rgba(0, 0, 0, 0.2);
+  
+  --aw-color-text-page: var(--text-primary);
+  --aw-color-text-muted: var(--text-secondary);
+  color-scheme: dark;
+} 

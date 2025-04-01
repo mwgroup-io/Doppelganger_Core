@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<!-- 
+Author: @tweathers-sec 
+Copyright: @tweathers-sec and Mayweather Group LLC 
+-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>doppelgänger RFID</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul class="navigation">
+                <li><a href="./index.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        <div class="section-header">
+            <h4>System Information</h4>
+        </div>
+        <table class="content-table">
+            <tr>
+                <th class="content-head">Device</th>
+                <th class="content-head">Version</th>
+                <th class="content-head">Build Date</th>
+            </tr>
+            <tbody>
+                <tr>
+                    <td id="deviceInfo">Loading...</td>
+                    <td id="firmwareVersion">Loading...</td>
+                    <td id="buildDate">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr>
+
+    <div class="wrapper">
+        <div class="section-header">
+            <h4>Theme</h4>
+        </div>
+        <div class="theme-toggle">
+            <select id="theme-select" onchange="changeTheme(this.value)">
+                <option value="arrow-dark" selected>Arrow Dark</option>
+                <option value="arrow">Arrow</option>
+                <option value="classic">Classic</option>
+                <option value="dark">Dark</option>
+                <option value="dracula">Dracula</option>
+                <option value="github">GitHub</option>
+                <option value="github-dark">GitHub Dark</option>
+                <option value="light">Light</option>
+                <option value="monokai">Monokai</option>
+                <option value="nord">Nord</option>
+                <option value="not-tron">Not Tron</option>
+            </select>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="wrapper">
+        <div class="section-header">
+            <h4>WiFi Reset Card</h4>
+        </div>
+        <table class="content-table">
+            <tr>
+                <th class="content-head" data-column="RBL" data-order="desc">
+                    Bit Length
+                </th>
+                <th class="content-head" data-column="RFC" data-order="desc">
+                    Facility Code
+                </th>
+                <th class="content-head" data-column="SCN" data-order="desc">
+                    Card Number
+                </th>
+            </tr>
+            <tbody id="cardTable"></tbody>
+        </table>
+
+        <button type="button" class="update-button" onclick="toggleResetCardVisibility();">Modify Reset Card</button>
+
+        <form class="resetCardForm">
+            <div class="row">
+                <div class="input-group">
+                    <label for="bit_length">Bit Length:</label>
+                    <input type="text" id="bit_length" name="bit_length" value="">
+                </div>
+                <div class="input-group">
+                    <label for="facility_code">Facility Code:</label>
+                    <input type="text" id="facility_code" name="facility_code" value="">
+                </div>
+                <div class="input-group">
+                    <label for="card_number">Card Number:</label>
+                    <input type="text" id="card_number" name="card_number" value="">
+                </div>
+                <div class="button-container">
+                    <button type="button" class="update-button centered"
+                        onclick="processResetCardForm();">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="wrapper">
+        <div class="section-header">
+            <h4>Notifications</h4>
+        </div>
+        <div class="theme-toggle">
+            <p>Notifications are Currently: <span id="current-notification-mode">Loading...</span></p>
+        </div>
+
+        <button type="button" class="update-button" onclick="toggleNotificationsVisibility();">Modify Notification
+            Settings</button>
+
+        <form class="notificationsForm">
+            <div class="row">
+                <div class="input-group">
+                    <label for="enable_email">Notifications:</label>
+                    <select id="enable_email" name="enable_email">
+                        <option value="false">Disabled</option>
+                        <option value="true">Enabled</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="smtp_host">SMTP Host:</label>
+                    <input type="text" id="smtp_host" name="smtp_host" placeholder="smtp.domain.com">
+                </div>
+                <div class="input-group">
+                    <label for="smtp_port">SMTP Port:</label>
+                    <input type="text" id="smtp_port" name="smtp_port" placeholder="465">
+                </div>
+                <div class="input-group">
+                    <label for="smtp_user">Username:</label>
+                    <input type="text" id="smtp_user" name="smtp_user" placeholder="sender@domain.com">
+                </div>
+                <div class="input-group">
+                    <label for="smtp_pass">Password:</label>
+                    <input type="password" id="smtp_pass" name="smtp_pass">
+                </div>
+                <div class="input-group">
+                    <label for="smtp_recipient">Recipient:</label>
+                    <input type="text" id="smtp_recipient" name="smtp_recipient" placeholder="number@carrier.com">
+                </div>
+                <div class="button-container">
+                    <button type="button" class="update-button centered"
+                        onclick="processNotificationsForm();">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="wrapper">
+        <div class="section-header">
+            <h4>GPIO Configuration</h4>
+        </div>
+        <div class="theme-toggle">
+            <table class="content-table">
+                <tr>
+                    <th class="content-head">GPIO</th>
+                    <th class="content-head">Status</th>
+                    <th class="content-head">Pulse Duration</th>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td>GPIO 35</td>
+                        <td id="pin35-status">Loading...</td>
+                        <td><span id="pin35-duration">Loading...</span> ms</td>
+                    </tr>
+                    <tr>
+                        <td>GPIO 36</td>
+                        <td id="pin36-status">Loading...</td>
+                        <td><span id="pin36-duration">Loading...</span> ms</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" class="update-button" onclick="toggleGPIOVisibility();">Modify GPIO Settings</button>
+
+        <form class="gpioForm">
+            <div class="row">
+                <div class="input-group">
+                    <label for="pin35_status">GPIO 35:</label>
+                    <select id="pin35_status" name="pin35_status">
+                        <option value="disabled">Disabled</option>
+                        <option value="enabled">Enabled</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="pin35_pulse_duration">Duration:</label>
+                    <input type="number" id="pin35_pulse_duration" name="pin35_pulse_duration" min="100" max="10000"
+                        step="100" value="1000">
+                </div>
+                <div class="input-group">
+                    <label for="pin36_status">GPIO 36:</label>
+                    <select id="pin36_status" name="pin36_status">
+                        <option value="disabled">Disabled</option>
+                        <option value="enabled">Enabled</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="pin36_pulse_duration">Duration:</label>
+                    <input type="number" id="pin36_pulse_duration" name="pin36_pulse_duration" min="100" max="10000"
+                        step="100" value="1000">
+                </div>
+                <div class="button-container">
+                    <button type="button" class="update-button centered" onclick="processGPIOForm();">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="wrapper">
+        <div class="section-header">
+            <h4>Serial Debugging</h4>
+        </div>
+        <div class="theme-toggle">
+            <p>Debug Mode is Currently: <span id="current-debug-mode">Loading...</span></p>
+        </div>
+        <div class="theme-toggle">
+            <select id="debug-select">
+                <!-- Will be populated dynamically based on current state -->
+            </select>
+        </div>
+        <div class="button-container">
+            <button type="button" class="update-button centered" id="debug-submit-button"
+                onclick="processDebugForm();">Submit</button>
+        </div>
+    </div>
+
+    <script src="js/reset_card_config.js"></script>
+    <script src="js/reset_card.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/debug_config.js"></script>
+    <script src="js/debug.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/system_info.js"></script>
+    <script src="js/gpio_config.js"></script>
+
+    <script>
+        // Function to toggle the visibility of the form
+        function toggleResetCardVisibility() {
+            const form = document.querySelector(".resetCardForm");
+            form.classList.toggle("visible");
+        }
+
+        function toggleNotificationsVisibility() {
+            const form = document.querySelector(".notificationsForm");
+            form.classList.toggle("visible");
+        }
+
+        function toggleDebugVisibility() {
+            const form = document.querySelector(".debugForm");
+            form.classList.toggle("visible");
+        }
+
+        function toggleGPIOVisibility() {
+            const form = document.querySelector(".gpioForm");
+            form.classList.toggle("visible");
+        }
+
+        // Theme handling
+        function changeTheme(theme) {
+            setTheme(theme);
+        }
+
+        // Set initial theme on page load
+        document.addEventListener("DOMContentLoaded", function () {
+            const themeSelect = document.getElementById("theme-select");
+            if (themeSelect) {
+                const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+                themeSelect.value = currentTheme;
+            }
+        });
+    </script>
+
+    <footer class="footer">
+        <img class="theme-logo" src="img/doppelganger_dm.png" alt="doppelganger rfid"
+            onclick="location.href='https://physicalexploit.com/docs/products/getting-started/';">
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+{
+  "pin35_enabled": false,
+  "pin36_enabled": false,
+  "pin35_default_high": false,
+  "pin36_default_high": false,
+  "pin35_pulse_duration": 1000,
+  "pin36_pulse_duration": 1000
+}
