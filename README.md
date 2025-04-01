@@ -1,6 +1,6 @@
 # Doppelgänger Pro v2
 
-![Doppelgänger Logo](https://github.com/optiv/doppelganger/blob/main/git_images/dop_logo.png)
+![Doppelgänger Logo](./images/dop_logo.png)
 
 Doppelgänger Pro v2 is a professional-grade RFID card cloning and analysis tool designed for authorized penetration testing. Built on the ESP32S3 platform, it offers advanced features for capturing and analyzing access control card data while maintaining operational security and ease of use.
 
