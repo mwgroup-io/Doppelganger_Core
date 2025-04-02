@@ -96,7 +96,7 @@ The table below summarizes various card data formats that Doppelganger supports.
 | 12V DC Power Supply (for RFID Reader)             | 1   |
 | 5.5x2.1mm DC Power Cable                          | 1   |
 | 22 AWG Solid Core Wire (Red, Black, Green, White) | 1   |
-| Mounting Hardware Kit                             | 1   |
+| Mounting Hardware Kit (Included)                  | 1   |
 
 **Note:** Only attempt hardware integration if you are experienced with electronic assembly. Improper wiring may damage your equipment.
 
