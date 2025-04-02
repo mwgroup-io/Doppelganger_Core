@@ -89,14 +89,14 @@ The table below summarizes various card data formats that Doppelganger supports.
 * HID Indala ASR-620++ (No Longer Manufactured by HID)
 
 ### Required Components
-| Item                                                                       | Qty |
-| -------------------------------------------------------------------------- | --- |
-| Doppelgänger RFID ESP32S3 Development Board                                | 1   |
-| USB-C Cable (for flashing firmare)                                         | 1   |
-| 12V DC Power Supply (for RFID Reader)                                      | 1   |
-| 5.5x2.1mm DC Power Cable                                                   | 1   |
-| 22 AWG Solid Core Wire (Red (12V DC), Black (GND), Green (D0), White (D1)) | 1   |
-| Mounting Hardware Kit                                                      | 1   |
+| Item                                              | Qty |
+| ------------------------------------------------- | --- |
+| Doppelgänger RFID ESP32S3 Development Board       | 1   |
+| USB-C Cable (for flashing firmare)                | 1   |
+| 12V DC Power Supply (for RFID Reader)             | 1   |
+| 5.5x2.1mm DC Power Cable                          | 1   |
+| 22 AWG Solid Core Wire (Red, Black, Green, White) | 1   |
+| Mounting Hardware Kit                             | 1   |
 
 **Note:** Only attempt hardware integration if you are experienced with electronic assembly. Improper wiring may damage your equipment.
 
