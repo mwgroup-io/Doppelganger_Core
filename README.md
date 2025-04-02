@@ -102,6 +102,12 @@ The table below summarizes various card data formats that Doppelganger supports.
 
 ## Wiring Guide
 
+> ⚠️ **POWER WARNING** ⚠️
+> 
+> - Only one 12V power source should be used at a time (either DC jack OR screw terminal)
+> - USB-C and 12V power can be safely connected simultaneously
+> - Always verify the correct polarity when using the screw terminal
+
 ### Power Connections
 1. **12V DC Power Supply Options**
    - **Option 1: DC Power Jack**
@@ -113,12 +119,6 @@ The table below summarizes various card data formats that Doppelganger supports.
 2. **RFID Reader Power**
    - The Doppelgänger board provides a 12V DC pass-through connection for the RFID reader
    - Connect the reader's power input to the 12V DC output on the Doppelgänger board
-
-> ⚠️ **POWER WARNING** ⚠️
-> 
-> - Only one 12V power source should be used at a time (either DC jack OR screw terminal)
-> - USB-C and 12V power can be safely connected simultaneously
-> - Always verify the correct polarity when using the screw terminal
 
 ### Wiegand Interface Connections
 1. **Data Lines**
