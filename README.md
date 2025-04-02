@@ -89,16 +89,66 @@ The table below summarizes various card data formats that Doppelganger supports.
 * HID Indala ASR-620++ (No Longer Manufactured by HID)
 
 ### Required Components
-| Item                                        | Qty |
-| ------------------------------------------- | --- |
-| Doppelgänger RFID ESP32S3 Development Board | 1   |
-| USB-C Power Supply                          | 1   |
-| 12V DC Power Supply (for RFID Reader)       | 1   |
-| 5.5x2.1mm DC Power Cable                    | 1   |
-| 22 AWG Solid Core Wire (Various Colors)     | 1   |
-| Mounting Hardware Kit                       | 1   |
+| Item                                                                       | Qty |
+| -------------------------------------------------------------------------- | --- |
+| Doppelgänger RFID ESP32S3 Development Board                                | 1   |
+| USB-C Cable (for flashing firmare)                                         | 1   |
+| 12V DC Power Supply (for RFID Reader)                                      | 1   |
+| 5.5x2.1mm DC Power Cable                                                   | 1   |
+| 22 AWG Solid Core Wire (Red (12V DC), Black (GND), Green (D0), White (D1)) | 1   |
+| Mounting Hardware Kit                                                      | 1   |
 
 **Note:** Only attempt hardware integration if you are experienced with electronic assembly. Improper wiring may damage your equipment.
+
+## Wiring Guide
+
+### Power Connections
+1. **12V DC Power Supply Options**
+   - **Option 1: DC Power Jack**
+     - Connect the 12V DC power supply to the 5.5x2.1mm DC power jack on the Doppelgänger board
+   - **Option 2: 2-Pin Screw Terminal**
+     - Alternatively, connect the 12V DC power supply to the included 2-pin screw terminal
+   - The board will automatically regulate this down to 5V and 3.3V for internal use
+
+2. **RFID Reader Power**
+   - The Doppelgänger board provides a 12V DC pass-through connection for the RFID reader
+   - Connect the reader's power input to the 12V DC output on the Doppelgänger board
+
+> ⚠️ **POWER WARNING** ⚠️
+> 
+> - Only one 12V power source should be used at a time (either DC jack OR screw terminal)
+> - USB-C and 12V power can be safely connected simultaneously
+> - Always verify the correct polarity when using the screw terminal
+
+### Wiegand Interface Connections
+1. **Data Lines**
+   - Connect the Green wire (Data0) from the RFID reader to the Data0 pin on the Doppelgänger board
+   - Connect the White wire (Data1) from the RFID reader to the Data1 pin on the Doppelgänger board
+   - Connect the Black wire (GND) from the RFID reader to any GND pin on the Doppelgänger board
+
+2. **Power to RFID Reader**
+   - Connect the Red wire (12V DC) from the Doppelgänger board to the RFID reader's power input
+   - Connect the Black wire (GND) from the Doppelgänger board to the RFID reader's ground
+
+### Connection Diagram
+```
+RFID Reader                     Doppelgänger Board
++----------------+             +------------------+
+|                |             |                  |
+| Data0 (Green)  |------------>| Data0            |
+| Data1 (White)  |------------>| Data1            |
+| GND (Black)    |------------>| GND              |
+| 12V (Red)      |<------------| 12V DC Output    |
+|                |             |                  |
++----------------+             +------------------+
+```
+
+**Important Safety Notes:**
+- Always power off the device before making or changing connections
+- Double-check all connections before applying power
+- Ensure proper polarity when connecting power supplies
+- Use appropriate wire gauges for power connections
+- Keep wiring neat and organized to prevent shorts
 
 ## Getting Started
 
