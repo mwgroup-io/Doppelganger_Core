@@ -6,15 +6,15 @@
 #include <WiFiClientSecure.h>
 
 // Define static members
+bool EmailManager::enable_email = false;
 char EmailManager::smtp_host[35] = "";
 char EmailManager::smtp_user[35] = "";
 char EmailManager::smtp_pass[35] = "";
 char EmailManager::smtp_recipient[35] = "";
-char EmailManager::smtp_port[5] = "587"; // Default port as string
+char EmailManager::smtp_port[5] = "465"; // Default SSL port
 
 EmailManager::EmailManager() : is_configured(false), lastPinTime(0)
 {
-    // Constructor
 }
 
 EmailManager::~EmailManager()
@@ -482,7 +482,17 @@ void EmailManager::readConfig()
         }
         else
         {
-            bool enable_email = doc["enable_email"].as<bool>();
+            // Handle both string and boolean values for enable_email
+            bool enable_email = false;
+            if (doc["enable_email"].is<bool>())
+            {
+                enable_email = doc["enable_email"].as<bool>();
+            }
+            else if (doc["enable_email"].is<const char *>())
+            {
+                enable_email = strcmp(doc["enable_email"].as<const char *>(), "true") == 0;
+            }
+
             if (enable_email)
             {
                 strncpy(smtp_host, doc["smtp_host"], sizeof(smtp_host) - 1);

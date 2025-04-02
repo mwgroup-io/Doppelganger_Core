@@ -26,4 +26,4 @@ private:
     String formatPinCode(CardProcessor &cardProcessor);
 };
 
-#endif // CARD_EVENT_HANDLER_H
+#endif

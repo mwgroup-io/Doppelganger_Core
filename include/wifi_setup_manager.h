@@ -9,6 +9,9 @@
 // Default timestamp for time validation (1970-01-01 00:00:00)
 #define ESP_TIME_DEFAULT_TS 0
 
+// Custom CSS for WiFi manager portal
+extern const char *WIFI_MANAGER_CUSTOM_CSS;
+
 class WiFiSetupManager
 {
 public:
@@ -16,8 +19,8 @@ public:
     void begin(const char *device, const char *defaultPASS, const char *prefixSSID);
     bool isConnected() const;
     void resetStoredWiFi();
-    void resetSettings(); // Add resetSettings method
-    bool setupTime();     // Add time setup method
+    void resetSettings();
+    bool setupTime();
     const char *getSSID() const;
     IPAddress getLocalIP() const;
     IPAddress getGatewayIP() const;
@@ -46,4 +49,4 @@ private:
 // Global instance
 extern WiFiSetupManager &wifiSetupManager;
 
-#endif // WIFI_SETUP_MANAGER_H
+#endif

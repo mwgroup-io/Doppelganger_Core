@@ -30,10 +30,8 @@ void ResetCardManager::setDefaultResetCard()
         return;
     }
 
-    // Print pretty version to Serial for debugging
     serializeJsonPretty(json, Serial);
 
-    // Write compact version to file without extra newlines
     if (serializeJson(json, resetCardFile) == 0)
     {
         Serial.println(F("[RESET CARD] Failed to write the data to file"));
@@ -81,7 +79,6 @@ void ResetCardManager::checkResetCard(CardProcessor &cardProcessor)
         return;
     }
 
-    // Toggle stealth mode on match
     if (cardProcessor.getBitCount() == resetBL &&
         cardProcessor.getFacilityCode() == resetFC &&
         cardProcessor.getCardNumber() == resetCN)
@@ -100,4 +97,4 @@ void ResetCardManager::resetStoredWiFi()
     ESP.restart();
 }
 
-ResetCardManager resetCardManager; // Global instance definition
+ResetCardManager resetCardManager;

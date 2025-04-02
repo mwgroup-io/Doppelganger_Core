@@ -1,10 +1,11 @@
 /*
- * Doppelgänger Pro v2 MWGroup Edition
+ * Doppelgänger Core
  * Version 1.0.0 (22MAR2025)
+ * Copyright: Mayweather Group LLC
+ * Written by Travis Weathers (@tweathers-sec)
  *
  * Professional RFID card cloning and analysis tool.
  * For authorized penetration testing use only.
- * Written by Travis Weathers (@tweathers-sec)
  */
 
 #include <FS.h>
@@ -17,14 +18,12 @@
 #include "debug_manager.h"
 #include "wifi_setup_manager.h"
 #include "version_config.h"
-#include "email_config.h"
 #include "wiegand_interface.h"
 #include "gpio_manager.h"
 #include <ArduinoJson.h>
 #include <ESPAsyncWebServer.h>
 #include <WebSocketsServer.h>
 #include <ESPmDNS.h>
-#include "wifi_manager_style.h"
 #include "led_manager.h"
 #include "notification_manager.h"
 #include "websocket_handler.h"
@@ -62,17 +61,14 @@ WebSocketsServer websockets(81);
 // System initialization
 void setup()
 {
-  // Disable all ESP32 debug output
   esp_log_level_set("vfs_api", ESP_LOG_NONE);
 
   Serial.begin(115200);
   delay(2000);
   setCpuFrequencyMhz(CPU_FREQ_NORMAL);
 
-  // Display startup banner
   logger.logStartupBanner(device, version, builddate, hardware);
 
-  // Initialize filesystem
   logger.logFilesystemStatus("Initializing the filesystem...", true);
   if (!LittleFS.begin(FORMAT_LITTLEFS_IF_FAILED))
   {
@@ -80,26 +76,20 @@ void setup()
     return;
   }
 
-  // Initialize debug settings and check state
   debugManager.begin();
 
-  // Initialize LED manager
   LEDManager::getInstance().begin();
 
-  // Initialize GPIO manager
   GPIOManager::getInstance().begin();
 
-  // Configure hardware reset pins
   pinMode(RST, INPUT_PULLUP);
   ResetManager::getInstance().begin();
 
-  // Initialize Wiegand interface
   logger.logGPIOStatus("Preparing GPIO configuration...");
   wiegandInterface.begin();
   cardProcessor.reset();
   logger.logGPIOStatus("GPIO configuration complete and ready");
 
-  // Initialize WiFi
   Serial.println("======================================================================");
   wifiSetupManager.begin(device, defaultPASS, prefixSSID);
 
@@ -109,7 +99,6 @@ void setup()
   }
   else
   {
-    // Wait for NTP sync
     if (wifiSetupManager.setupTime())
     {
       Serial.println("======================================================================");
@@ -117,10 +106,11 @@ void setup()
 
       emailManager.readConfig();
 
-      // Initialize email manager if configured
       if (emailManager.isConfigured())
       {
-        emailManager.begin(smtp_host, smtp_port, smtp_user, smtp_pass, smtp_recipient);
+        emailManager.begin(EmailManager::smtp_host, EmailManager::smtp_port,
+                           EmailManager::smtp_user, EmailManager::smtp_pass,
+                           EmailManager::smtp_recipient);
         Serial.println("======================================================================");
       }
 
@@ -142,22 +132,19 @@ void setup()
     }
   }
 
-  // Configure and start web server
   logger.logWebServerStatus("Starting web services");
 
   DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
   DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET");
   DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
-  DefaultHeaders::Instance().addHeader("Content-Encoding", "identity"); // Tell clients not to expect compression
-  DefaultHeaders::Instance().addHeader("Accept-Encoding", "identity");  // Tell clients we only support uncompressed
+  DefaultHeaders::Instance().addHeader("Content-Encoding", "identity");
+  DefaultHeaders::Instance().addHeader("Accept-Encoding", "identity");
 
-  // Serve static files
   server.serveStatic("/", LittleFS, "/www/")
       .setDefaultFile("index.html")
       .setCacheControl("no-cache")
       .setLastModified("Mon, 20 Jun 2016 14:00:00 GMT");
 
-  // Add firmware version endpoint
   server.on("/firmware", HTTP_GET, [](AsyncWebServerRequest *request)
             {
     AsyncResponseStream *response = request->beginResponseStream("application/json");
@@ -168,13 +155,11 @@ void setup()
     serializeJson(doc, *response);
     request->send(response); });
 
-  // Add notifications endpoint
   server.on("/notifications", HTTP_GET, [](AsyncWebServerRequest *request)
             {
     AsyncResponseStream *response = request->beginResponseStream("application/json");
     JsonDocument doc;
     
-    // Read current notification settings from file
     File notificationConfigFile = LittleFS.open(NOTIFICATION_CONFIG_FILE, "r");
     if (notificationConfigFile) {
       DeserializationError error = deserializeJson(doc, notificationConfigFile);
@@ -200,7 +185,6 @@ void setup()
     }
     request->send(response); });
 
-  // Add GPIO configuration endpoint
   server.on("/gpio.json", HTTP_GET, [](AsyncWebServerRequest *request)
             {
     AsyncResponseStream *response = request->beginResponseStream("application/json");
@@ -252,22 +236,16 @@ void setup()
   logger.logWebServerURL("Doppelgänger", "RFID.local");
   logger.logWebServerURL("Doppelgänger", wifiSetupManager.getLocalIP().toString().c_str());
 
-  // Display current reset card config
   logger.logResetCardInfo(LOGGER_RESET_CARD_FILE);
 
-  // Initialize reset card manager
   resetCardManager.begin();
 
-  // Initialize card event handler
   cardEventHandler.begin();
 
-  // Show LED status message
   logger.logLEDStatus("[LED] Informing of successful boot");
 
-  // Run LED startup sequence
   LEDManager::getInstance().runStartupSequence();
 
-  // Show boot complete message last
   logger.logBootComplete();
 }
 
@@ -277,22 +255,17 @@ void setup()
 void loop()
 {
   static unsigned long firstPressTime = 0;
-  static unsigned long debounceDelay = 100; // Reduced from 500ms to 100ms for faster PIN entry
+  static unsigned long debounceDelay = 100;
   static bool waitingForSecondPress = false;
 
-  // Update LED manager
   LEDManager::getInstance().update();
 
-  // Process queued emails
   emailManager.update();
 
-  // Handle hardware reset
   ResetManager::getInstance().update();
 
-  // Update GPIO manager
   GPIOManager::getInstance().loop();
 
-  // Process card data
   cardProcessor.processCard();
 
   if (cardProcessor.isReadComplete())

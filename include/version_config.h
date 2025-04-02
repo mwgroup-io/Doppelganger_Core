@@ -1,22 +1,22 @@
-/*
- * Doppelgänger Pro v2 MWGroup Edition
- * Version 1.0.0 (22MAR2025)
- *
- * Professional RFID card cloning and analysis tool.
- * For authorized penetration testing use only.
- * Written by Travis Weathers (@tweathers-sec)
- */
-
 #ifndef VERSION_CONFIG_H
 #define VERSION_CONFIG_H
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 
 // Version info
 extern const char *version;
 extern const char *builddate;
 extern const char *device;
 extern const char *hardware;
+
+// Helper function to populate version info into a JSON document
+inline void populateVersionInfo(JsonDocument &doc)
+{
+    doc["version"] = version;
+    doc["buildDate"] = builddate;
+    doc["device"] = device;
+}
 
 // System settings
 #define CPU_FREQ_NORMAL 240 // MHz (only supported values are 240, 160, 80, 40)
@@ -48,4 +48,4 @@ extern const char *prefixSSID; // Will be defined in version_config.cpp
 #define portalTimeout 180      // Device moves to the main loop after X seconds if no configuration is entered
 #define connectTimeout 30      // Enters configuration mode if device can't find previously stored AP in X seconds
 
-#endif // VERSION_CONFIG_H
+#endif

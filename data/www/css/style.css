@@ -22,7 +22,7 @@ body.theme-loaded {
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.3;
   margin: 0 0 1rem;
 }
@@ -112,7 +112,7 @@ h1, h2, h3, h4, h5, h6 {
 .section-header h4 {
   margin: 0;
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--accent-color);
   letter-spacing: 0.02em;
   text-align: center;
@@ -880,7 +880,7 @@ code {
 
 [data-theme="nord"] .section-header h4 {
   color: var(--nord-frost-2);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 [data-theme="nord"] .navigation {
@@ -1047,7 +1047,7 @@ code {
 
 [data-theme="github"] .section-header h4 {
   color: var(--github-gray-900);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 [data-theme="github"] .navigation {
@@ -1210,7 +1210,7 @@ code {
 
 [data-theme="github-dark"] .section-header h4 {
   color: var(--github-dark-text);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 [data-theme="github-dark"] .navigation {
@@ -1547,7 +1547,7 @@ hr {
 
 [data-theme="arrow"] .section-header h4 {
   color: var(--accent-color);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 [data-theme="arrow"] input,
@@ -1592,7 +1592,7 @@ hr {
 
 [data-theme="arrow-dark"] .section-header h4 {
   color: var(--accent-color);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 [data-theme="arrow-dark"] .navigation {

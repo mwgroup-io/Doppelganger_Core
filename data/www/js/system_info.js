@@ -1,3 +1,6 @@
+// Author: @tweathers-sec
+// Copyright: @tweathers-sec and Mayweather Group LLC
+
 // Function to fetch firmware version
 async function getFirmwareVersion() {
   try {

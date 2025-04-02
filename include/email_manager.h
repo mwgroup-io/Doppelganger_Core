@@ -14,6 +14,14 @@
 class EmailManager
 {
 public:
+    // Email configuration
+    static bool enable_email;
+    static char smtp_host[35];
+    static char smtp_user[35];
+    static char smtp_pass[35];
+    static char smtp_recipient[35];
+    static char smtp_port[5];
+
     static EmailManager &getInstance();
     void begin(const char *host, const char *port, const char *user, const char *pass, const char *recipient);
     bool sendCardData(uint8_t bitCount, uint32_t facilityCode, uint32_t cardNumber, const String &ssid, const String &binData, const String &csvHEX, const String &reversedPairsUID);
@@ -28,13 +36,6 @@ protected:
     // Prevent copying
     EmailManager(const EmailManager &) = delete;
     EmailManager &operator=(const EmailManager &) = delete;
-
-    // Email configuration
-    static char smtp_host[35];
-    static char smtp_user[35];
-    static char smtp_pass[35];
-    static char smtp_recipient[35];
-    static char smtp_port[5]; // Changed from uint16_t to char[5]
 
     // PIN buffering
     String pinBuffer;
@@ -84,4 +85,4 @@ protected:
 
 extern EmailManager emailManager; // Global instance declaration
 
-#endif // EMAIL_MANAGER_H
+#endif

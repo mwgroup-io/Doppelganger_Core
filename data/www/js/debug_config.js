@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
   fetch("/debug_config.json")
     .then((response) => response.json())
     .then((data) => {
-      console.log("Received debug config:", data); // Debug log
       updateDebugDisplay(data);
     })
     .catch((error) => {
@@ -28,7 +27,6 @@ function updateDebugDisplay(data) {
 
   // Get debug state directly from the config
   const isEnabled = Boolean(data.DEBUG);
-  console.log("Debug state:", isEnabled); // Debug log
 
   // Update the status text
   debugModeSpan.textContent = isEnabled ? "Enabled" : "Disabled";

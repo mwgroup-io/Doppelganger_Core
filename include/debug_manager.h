@@ -41,4 +41,4 @@ private:
 
 extern DebugManager debugManager; // Global instance
 
-#endif // DEBUG_MANAGER_H
+#endif

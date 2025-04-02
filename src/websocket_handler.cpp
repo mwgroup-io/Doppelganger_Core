@@ -1,5 +1,8 @@
 #include "websocket_handler.h"
 
+// Declare external notification manager instance
+extern NotificationManager &notificationManager;
+
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
 {
     String message;
@@ -68,17 +71,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             int pin35PulseDuration = doc["pin35_pulse_duration"] | 1000;
             int pin36PulseDuration = doc["pin36_pulse_duration"] | 1000;
 
-            // Update GPIO manager state
             GPIOManager::getInstance().setPin35Enabled(pin35Enabled, pin35DefaultHigh);
             GPIOManager::getInstance().setPin36Enabled(pin36Enabled, pin36DefaultHigh);
             GPIOManager::getInstance().setPin35PulseDuration(pin35PulseDuration);
             GPIOManager::getInstance().setPin36PulseDuration(pin36PulseDuration);
 
-            // Update card processor flags for card read behavior
             cardProcessor.setPin35OnCardRead(pin35Enabled);
             cardProcessor.setPin36OnCardRead(pin36Enabled);
 
-            // Save the configuration
             File gpioConfigFile = LittleFS.open("/www/gpio.json", "w");
             if (gpioConfigFile)
             {
@@ -93,7 +93,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
                 gpioConfigFile.close();
             }
 
-            // Send success response
             JsonDocument response;
             response["status"] = "success";
             String responseStr;
@@ -112,8 +111,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] GPIO settings have been restored to factory defaults.");
 
-            // Send success response
             JsonDocument response;
+            response["source"] = "gpio";
             response["status"] = "success";
             String responseStr;
             serializeJson(response, responseStr);
@@ -143,6 +142,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
 
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Stored card data has been cleared.");
+
+            JsonDocument response;
+            response["source"] = "cards";
+            response["status"] = "success";
+            String responseStr;
+            serializeJson(response, responseStr);
+            websockets.sendTXT(num, responseStr);
         }
 
         if (restore_notifications_config)
@@ -150,11 +156,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Restoring notification configuration to factory defaults...");
 
-            // Only remove and reset notification config, not reset card
             LittleFS.remove(NOTIFICATION_CONFIG_FILE);
             delay(1000);
 
-            // Create empty notification config with default structure
             JsonDocument notifyDoc;
             notifyDoc["enable_email"] = false;
             notifyDoc["smtp_host"] = "";
@@ -172,11 +176,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Notification preferences have been restored to defaults.");
 
-            // Reload notification config without affecting reset card
             emailManager.readConfig();
 
-            // Send success response
             JsonDocument response;
+            response["source"] = "notifications";
             response["status"] = "success";
             String responseStr;
             serializeJson(response, responseStr);
@@ -195,6 +198,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("");
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Reset Card default values have been restored.");
+
+            JsonDocument response;
+            response["source"] = "reset_card";
+            response["status"] = "success";
+            String responseStr;
+            serializeJson(response, responseStr);
+            websockets.sendTXT(num, responseStr);
         }
 
         if (reset_wireless)
@@ -202,6 +212,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Removing stored wireless credentials...");
             wifiSetupManager.resetStoredWiFi();
+
+            JsonDocument response;
+            response["source"] = "wireless";
+            response["status"] = "success";
+            String responseStr;
+            serializeJson(response, responseStr);
+            websockets.sendTXT(num, responseStr);
         }
 
         if (default_settings)
@@ -209,14 +226,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Restoring factory defaults...");
 
-            // 1. Clear stored card data
             LittleFS.remove(CARDS_CSV_FILE);
             delay(1000);
             File csvCards = LittleFS.open(CARDS_CSV_FILE, "w");
             csvCards.close();
             Serial.println("[WEBSOCKET] Stored card data has been cleared.");
 
-            // 2. Reset notification settings
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Resetting notification settings to factory defaults...");
             LittleFS.remove(NOTIFICATION_CONFIG_FILE);
@@ -236,7 +251,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             emailManager.readConfig();
             Serial.println("[WEBSOCKET] Notification settings have been restored.");
 
-            // 3. Reset GPIO settings
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Resetting GPIO settings to factory defaults...");
             GPIOManager::getInstance().resetToDefaults();
@@ -244,7 +258,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             cardProcessor.setPin36OnCardRead(false);
             Serial.println("[WEBSOCKET] GPIO settings have been restored to factory defaults.");
 
-            // 4. Reset card settings
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Restoring the Reset Card to default values...");
             LittleFS.remove(RESET_CARD_FILE);
@@ -255,10 +268,16 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("");
             Serial.println("[WEBSOCKET] Reset Card default values have been restored.");
 
-            // 5. Reset WiFi settings (last, as this triggers a reboot)
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Removing stored WiFi credentials...");
             wifiSetupManager.resetSettings();
+
+            JsonDocument response;
+            response["source"] = "system";
+            response["status"] = "success";
+            String responseStr;
+            serializeJson(response, responseStr);
+            websockets.sendTXT(num, responseStr);
 
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Reset device to factory defaults. Restarting the device.");
@@ -271,7 +290,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] Saving notification configuration...");
 
-            // Create a new JSON document for the notification settings
             JsonDocument notificationDoc;
             notificationDoc["enable_email"] = doc["enable_email"];
             notificationDoc["smtp_host"] = doc["smtp_host"];
@@ -295,6 +313,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             Serial.println("");
             Serial.println("======================================================================");
             Serial.println("[WEBSOCKET] File successfully written");
+
+            JsonDocument response;
+            response["status"] = "success";
+            String responseStr;
+            serializeJson(response, responseStr);
+            websockets.sendTXT(num, responseStr);
         }
 
         if (hasRBL && hasRFC && hasRCN)
@@ -308,23 +332,33 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             File resetCardFile = LittleFS.open(RESET_CARD_FILE, "w");
             if (resetCardFile)
             {
-                // Use compact JSON serialization and print on single line
                 JsonDocument resetDoc;
                 resetDoc["RBL"] = resetBL;
                 resetDoc["RFC"] = resetFC;
                 resetDoc["RCN"] = resetCN;
                 serializeJson(resetDoc, resetCardFile);
                 resetCardFile.close();
-                // Print on separate lines
                 Serial.println("[RESET] Writing the default Reset Card values...");
                 serializeJson(resetDoc, Serial);
                 Serial.println();
                 Serial.println("======================================================================");
                 Serial.println("[WEBSOCKET] Successfully updated Reset Card file");
+
+                JsonDocument response;
+                response["status"] = "success";
+                String responseStr;
+                serializeJson(response, responseStr);
+                websockets.sendTXT(num, responseStr);
             }
             else
             {
                 Serial.println("[WEBSOCKET] Failed to open the JSON file for writing.");
+                JsonDocument response;
+                response["status"] = "error";
+                response["message"] = "Failed to open Reset Card file for writing";
+                String responseStr;
+                serializeJson(response, responseStr);
+                websockets.sendTXT(num, responseStr);
             }
         }
 

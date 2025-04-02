@@ -28,7 +28,7 @@ Copyright: @tweathers-sec and Mayweather Group LLC
         </div>
         <table class="content-table">
             <tr>
-                <th class="content-head">Device</th>
+                <th class="content-head">Firmware</th>
                 <th class="content-head">Version</th>
                 <th class="content-head">Build Date</th>
             </tr>
@@ -146,11 +146,11 @@ Copyright: @tweathers-sec and Mayweather Group LLC
                 </div>
                 <div class="input-group">
                     <label for="smtp_pass">Password:</label>
-                    <input type="password" id="smtp_pass" name="smtp_pass">
+                    <input type="password" id="smtp_pass" name="smtp_pass" placeholder="App/Email Password">
                 </div>
                 <div class="input-group">
                     <label for="smtp_recipient">Recipient:</label>
-                    <input type="text" id="smtp_recipient" name="smtp_recipient" placeholder="number@carrier.com">
+                    <input type="text" id="smtp_recipient" name="smtp_recipient" placeholder="phone@carrier.com">
                 </div>
                 <div class="button-container">
                     <button type="button" class="update-button centered"
@@ -166,27 +166,25 @@ Copyright: @tweathers-sec and Mayweather Group LLC
         <div class="section-header">
             <h4>GPIO Configuration</h4>
         </div>
-        <div class="theme-toggle">
-            <table class="content-table">
+        <table class="content-table">
+            <tr>
+                <th class="content-head">GPIO</th>
+                <th class="content-head">Status</th>
+                <th class="content-head">Duration</th>
+            </tr>
+            <tbody>
                 <tr>
-                    <th class="content-head">GPIO</th>
-                    <th class="content-head">Status</th>
-                    <th class="content-head">Pulse Duration</th>
+                    <td>GPIO 35</td>
+                    <td id="pin35-status">Loading...</td>
+                    <td><span id="pin35-duration">Loading...</span> ms</td>
                 </tr>
-                <tbody>
-                    <tr>
-                        <td>GPIO 35</td>
-                        <td id="pin35-status">Loading...</td>
-                        <td><span id="pin35-duration">Loading...</span> ms</td>
-                    </tr>
-                    <tr>
-                        <td>GPIO 36</td>
-                        <td id="pin36-status">Loading...</td>
-                        <td><span id="pin36-duration">Loading...</span> ms</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                <tr>
+                    <td>GPIO 36</td>
+                    <td id="pin36-status">Loading...</td>
+                    <td><span id="pin36-duration">Loading...</span> ms</td>
+                </tr>
+            </tbody>
+        </table>
 
         <button type="button" class="update-button" onclick="toggleGPIOVisibility();">Modify GPIO Settings</button>
 
@@ -234,7 +232,6 @@ Copyright: @tweathers-sec and Mayweather Group LLC
         </div>
         <div class="theme-toggle">
             <select id="debug-select">
-                <!-- Will be populated dynamically based on current state -->
             </select>
         </div>
         <div class="button-container">
@@ -243,6 +240,7 @@ Copyright: @tweathers-sec and Mayweather Group LLC
         </div>
     </div>
 
+    <script src="js/websocket.js"></script>
     <script src="js/reset_card_config.js"></script>
     <script src="js/reset_card.js"></script>
     <script src="js/notifications.js"></script>
@@ -253,33 +251,10 @@ Copyright: @tweathers-sec and Mayweather Group LLC
     <script src="js/gpio_config.js"></script>
 
     <script>
-        // Function to toggle the visibility of the form
-        function toggleResetCardVisibility() {
-            const form = document.querySelector(".resetCardForm");
-            form.classList.toggle("visible");
-        }
-
-        function toggleNotificationsVisibility() {
-            const form = document.querySelector(".notificationsForm");
-            form.classList.toggle("visible");
-        }
-
-        function toggleDebugVisibility() {
-            const form = document.querySelector(".debugForm");
-            form.classList.toggle("visible");
-        }
-
-        function toggleGPIOVisibility() {
-            const form = document.querySelector(".gpioForm");
-            form.classList.toggle("visible");
-        }
-
-        // Theme handling
         function changeTheme(theme) {
             setTheme(theme);
         }
 
-        // Set initial theme on page load
         document.addEventListener("DOMContentLoaded", function () {
             const themeSelect = document.getElementById("theme-select");
             if (themeSelect) {

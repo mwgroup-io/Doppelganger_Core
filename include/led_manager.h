@@ -80,4 +80,4 @@ private:
     unsigned long lastBlinkTime = 0;
 };
 
-#endif // LED_MANAGER_H
+#endif

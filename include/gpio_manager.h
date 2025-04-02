@@ -39,7 +39,7 @@ private:
     GPIOManager();
     bool loadConfig();
     bool saveConfig();
-    void initializeGPIO(); // New method for GPIO initialization
+    void initializeGPIO();
 
 public:
     static GPIOManager &getInstance();
@@ -70,4 +70,4 @@ public:
     bool isInitialized() const;
 };
 
-#endif // GPIO_MANAGER_H
+#endif

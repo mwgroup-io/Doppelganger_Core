@@ -22,4 +22,4 @@ private:
 
 extern ResetCardManager resetCardManager; // Global instance declaration
 
-#endif // RESET_CARD_MANAGER_H
+#endif

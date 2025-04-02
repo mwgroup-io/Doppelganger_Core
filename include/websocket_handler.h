@@ -10,6 +10,7 @@
 #include "debug_manager.h"
 #include "logger.h"
 #include "version_config.h"
+#include "notification_manager.h"
 
 // Declare websockets as extern since it's defined in main.cpp
 extern WebSocketsServer websockets;

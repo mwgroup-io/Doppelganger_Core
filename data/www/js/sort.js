@@ -64,7 +64,6 @@ function parseCSV(csvData) {
     }
   });
 
-  // If the CSV ends with keypad data, add them as one row.
   if (keypadCNs.length > 0) {
     data.push({ BL: "PIN", FC: "N/A", CN: keypadCNs.join("") });
   }

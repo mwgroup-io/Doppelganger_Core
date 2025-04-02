@@ -1,7 +1,7 @@
 #include "notification_manager.h"
 #include <ArduinoJson.h>
-#include "email_config.h"
 #include <WiFi.h>
+#include "email_manager.h"
 
 NotificationManager &NotificationManager::getInstance()
 {
@@ -12,7 +12,6 @@ NotificationManager &NotificationManager::getInstance()
 void NotificationManager::begin()
 {
     // No need to read email config here as it's already done by emailManager
-    // Just initialize any other notification settings if needed
 }
 
 void NotificationManager::handleCardRead(const char *cardData)
@@ -78,18 +77,16 @@ void NotificationManager::updateSettings(const char *data)
     if (!error)
     {
         // Update email settings
-        if (doc["email"].is<JsonObject>())
+        if (doc["enable_email"].is<bool>())
         {
             emailManager.readConfig();
         }
-        // Add other notification settings as needed
     }
 }
 
 void NotificationManager::processNotification(const char *data)
 {
     // Process notification data and send to appropriate channels
-    // This could include webhook, web notifications, etc.
 }
 
 void NotificationManager::sendEmailNotification(const char *subject, const char *body)

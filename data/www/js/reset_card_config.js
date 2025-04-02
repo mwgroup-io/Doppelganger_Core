@@ -15,13 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var data = [];
 
     if (Array.isArray(jsonData)) {
-      // If it's an array of objects
       for (var i = 0; i < jsonData.length; i++) {
         var card = jsonData[i];
         addCardData(data, card);
       }
     } else {
-      // If it's a single object
       addCardData(data, jsonData);
     }
 

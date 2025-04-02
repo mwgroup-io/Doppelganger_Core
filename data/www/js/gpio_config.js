@@ -1,8 +1,6 @@
 // Author: @tweathers-sec
 // Copyright: @tweathers-sec and Mayweather Group LLC
 
-var connection = new WebSocket("ws://" + location.hostname + ":81/");
-
 // GPIO Configuration
 let gpioConfig = {
   pin35_enabled: false,
@@ -12,6 +10,11 @@ let gpioConfig = {
   pin35_pulse_duration: 1000,
   pin36_pulse_duration: 1000,
 };
+
+// Register GPIO message handler
+registerHandler("gpio", function (data) {
+  updateGPIOStatus();
+});
 
 // Function to update the GPIO status display
 function updateGPIOStatus() {
@@ -103,7 +106,7 @@ function processGPIOForm() {
       pin36_pulse_duration: pin36Duration,
     };
 
-    connection.send(JSON.stringify(formData));
+    sendData(formData);
     window.alert("GPIO settings have been updated.");
 
     // Hide the form
@@ -126,23 +129,10 @@ function toggleGPIOVisibility() {
   }
 }
 
-// WebSocket connection handling
-connection.onopen = function (e) {
-  console.log("[GPIO] WebSocket connection established");
-  updateGPIOStatus();
-};
-
-connection.onerror = function (error) {
-  console.log("[GPIO] WebSocket error: ", error);
-};
-
-connection.onmessage = function (e) {
-  console.log("[GPIO] Server: ", e.data);
-  updateGPIOStatus();
-};
-
-// Initialize GPIO status when page loads
+// Initialize when the page loads
 document.addEventListener("DOMContentLoaded", function () {
+  // Ensure we have a WebSocket connection
+  ensureWebSocket();
   updateGPIOStatus();
 
   // Ensure form is hidden initially

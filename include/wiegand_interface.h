@@ -62,4 +62,4 @@ private:
 
 extern WiegandInterface &wiegandInterface;
 
-#endif // WIEGAND_INTERFACE_H
+#endif
