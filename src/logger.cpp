@@ -59,18 +59,23 @@ const char *Logger::getCurrentTime()
 void Logger::consoleLog()
 {
     Serial.println("======================================================================");
-    if ((cardProcessor.getBitCount() == 26 || 27 || 28 || 29 || 30 || 31 || 33 || 34 || 35 || 36 || 37 || 48 || 100 || 200) &&
-        cardProcessor.getBitCount() != 4 && cardProcessor.getBitCount() != 32)
+    if (cardProcessor.getBitCount() == 4)
     {
-        logCardDataStandard();
+        logCardDataPIN();
     }
     else if (cardProcessor.getBitCount() == 32)
     {
         logCardDataPIV();
     }
-    else if (cardProcessor.getBitCount() == 4)
+    else if (cardProcessor.getBitCount() == 26 || cardProcessor.getBitCount() == 27 ||
+             cardProcessor.getBitCount() == 28 || cardProcessor.getBitCount() == 29 ||
+             cardProcessor.getBitCount() == 30 || cardProcessor.getBitCount() == 31 ||
+             cardProcessor.getBitCount() == 33 || cardProcessor.getBitCount() == 34 ||
+             cardProcessor.getBitCount() == 35 || cardProcessor.getBitCount() == 36 ||
+             cardProcessor.getBitCount() == 37 || cardProcessor.getBitCount() == 48 ||
+             cardProcessor.getBitCount() == 100 || cardProcessor.getBitCount() == 200)
     {
-        logCardDataPIN();
+        logCardDataStandard();
     }
     else
     {
@@ -153,6 +158,7 @@ void Logger::logCardDataPIN()
 
 void Logger::logCardDataError()
 {
+    std::lock_guard<std::mutex> lock(logMutex);
     Serial.println("[CARD READ] ERROR: Bad Card Read! Card data won't be displayed in the web log, but the data will be stored within the CSV file.");
     Serial.println("[CARD READ] POSSIBLE ISSUES:");
     Serial.println("[CARD READ]    (1) Card passed through the reader too quickly");
@@ -170,6 +176,28 @@ void Logger::logCardDataError()
     Serial.print(cardProcessor.getCsvHEX());
     Serial.print(", BIN = ");
     Serial.println(cardProcessor.getDataStreamBIN());
+
+    File csvCards = LittleFS.open(CARDS_CSV_FILE, "a");
+    if (!csvCards)
+    {
+        Serial.print("[LOG] There was an error opening ");
+        Serial.println(CARDS_CSV_FILE);
+        return;
+    }
+
+    csvCards.print("DATA_TYPE: NO_PARSER");
+    csvCards.print(", Bit_Length: ");
+    csvCards.print(cardProcessor.getBitCount());
+    csvCards.print(", Hex_Value: ");
+    csvCards.print(cardProcessor.getCsvHEX());
+    csvCards.print(", Facility_Code: ");
+    csvCards.print(cardProcessor.getFacilityCode(), DEC);
+    csvCards.print(", Card_Number: ");
+    csvCards.print(cardProcessor.getCardNumber(), DEC);
+    csvCards.print(", BIN: ");
+    csvCards.print(cardProcessor.getDataStreamBIN());
+    csvCards.print("\n");
+    csvCards.close();
 }
 
 void Logger::writeCardLog()

@@ -61,6 +61,7 @@ WebSocketsServer websockets(81);
 // System initialization
 void setup()
 {
+  delay(5000);
   esp_log_level_set("vfs_api", ESP_LOG_NONE);
 
   Serial.begin(115200);
