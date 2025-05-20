@@ -1,8 +1,8 @@
-# Doppelgänger Pro v2
+# Doppelgänger Core
 
 ![Doppelgänger Logo](https://github.com/mwgroup-io/Doppelganger_Core/blob/main/images/dop_logo.png)
 
-Doppelgänger Pro v2 is a professional-grade RFID card cloning and analysis tool designed for authorized penetration testing. Built on the ESP32S3 platform, it offers advanced features for capturing and analyzing access control card data while maintaining operational security and ease of use.
+Doppelgänger Core is a professional-grade RFID card cloning and analysis tool designed for authorized penetration testing. Built on the ESP32S3 platform, it offers advanced features for capturing and analyzing access control card data while maintaining operational security and ease of use.
 
 ## Getting Started
 To purchase the Doppelganger Longrange RFID Development Board head over to the [Practical Physical Exploitation Store](https://store.physicalexploit.com/). For detailed documentation on how to install, setup, and use the Doppelganger Longrange RFID Development Board visit the [Practical Physical Exploitation Store](https://physicalexploit.com/docs/products/getting-started/).
