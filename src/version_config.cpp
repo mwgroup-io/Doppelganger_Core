@@ -2,8 +2,8 @@
 
 // Version info
 const char *version = "1.0.0";
-const char *builddate = "01APR2025";
-const char *device = "D_Core";
+const char *builddate = "20250520";
+const char *device = "Core";
 const char *hardware = "1.0a";
 
 // Debug output macros
