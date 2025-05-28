@@ -176,7 +176,7 @@ For detialed guidance on device usage, reference the [Product Documentation](htt
 * **Real-time Notifications**: Email alerts, webhook support, web notifications
 * **Professional Interface**: Modern web UI, real-time display, advanced exports
 * **Detailed Logging**: Comprehensive debug information and card data analysis
-* * **GPIO**: Configurable GPIO for integrating haptic or other sensors
+* **GPIO**: Configurable GPIO for integrating haptic or other sensors
 
 ![Haptic Sensor](https://store.physicalexploit.com/cdn/shop/files/d_core_gpio_settings.jpg)
 
