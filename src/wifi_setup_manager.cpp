@@ -281,7 +281,7 @@ void WiFiSetupManager::setupWiFiManager(const char *deviceName, const char *defa
                                     { ESP.restart(); });
 
   // Set menu options
-  std::vector<const char *> menu = {"wifi", "wifinoscan", "sep", "info", "update", "sep", "restart", "exit"};
+  std::vector<const char *> menu = {"wifi",  "sep", "info", "sep", "restart", "exit"};
   wifiManager.setMenu(menu);
 
   // Set title and theme
