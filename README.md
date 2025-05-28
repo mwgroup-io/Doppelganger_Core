@@ -5,7 +5,7 @@
 Doppelgänger Core is a professional-grade RFID card cloning and analysis tool designed for authorized penetration testing. Built on the ESP32S3 platform, it offers advanced features for capturing and analyzing access control card data while maintaining operational security and ease of use.
 
 ## Getting Started
-To purchase the Doppelganger Longrange RFID Development Board head over to the [Practical Physical Exploitation Store](https://store.physicalexploit.com/). For detailed documentation on how to install, setup, and use the Doppelganger Longrange RFID Development Board visit the [Practical Physical Exploitation Store](https://physicalexploit.com/docs/products/getting-started/).
+To purchase the Doppelganger Longrange RFID Development Board head over to the [Practical Physical Exploitation Store](https://store.physicalexploit.com/). For detailed documentation on how to install, setup, and use the Doppelganger Longrange RFID Development Board visit the [Practical Physical Exploitation Product Documentation](https://physicalexploit.com/docs/products/rfid/doppelganger_development_board/).
 
 ## Hardware Specifications
 
@@ -143,6 +143,14 @@ RFID Reader                     Doppelgänger Board
 +----------------+             +------------------+
 ```
 
+### MaxiProx 5375
+
+![HID MaxiProx 5375](https://physicalexploit.com/product-docs/maxiprox_wiring_d_dev.png)
+
+### iCLASS R90SE
+
+![HID iCLASS R90SE](https://physicalexploit.com/product-docs/r90se_wiring_d_dev.png)
+
 **Important Safety Notes:**
 - Always power off the device before making or changing connections
 - Double-check all connections before applying power
@@ -152,18 +160,25 @@ RFID Reader                     Doppelgänger Board
 
 ## Getting Started
 
+For detialed guidance on device usage, reference the [Product Documentation](https://physicalexploit.com/docs/products/code/doppelganger_core/).
+
 1. Power on your Doppelgänger Pro device
 2. Connect to the **doppelgänger_XXXX** network (default password: **UndertheRadar**)
 3. Access the web interface at http://192.168.4.1 or http://rfid.local
 4. Configure WiFi and notification settings
 5. Begin capturing card data
 
+[WiFi Setup](https://physicalexploit.com/product-docs/d_core_wifi_manager.png)
+
+
 ## Features
 
 * **Real-time Notifications**: Email alerts, webhook support, web notifications
-* **Enhanced Security**: Secure boot, flash encryption, OTA protection
 * **Professional Interface**: Modern web UI, real-time display, advanced exports
 * **Detailed Logging**: Comprehensive debug information and card data analysis
+* * **GPIO**: Configurable GPIO for integrating haptic or other sensors
+
+![Haptic Sensor](https://store.physicalexploit.com/cdn/shop/files/d_core_gpio_settings.jpg)
 
 ## Legal Notice
 
