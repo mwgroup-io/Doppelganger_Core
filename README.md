@@ -1,3 +1,5 @@
+![Doppelganger_DEV_Board](https://store.physicalexploit.com/cdn/shop/files/DSC05101.jpg)
+
 # Doppelgänger Core
 
 ![Doppelgänger Logo](https://github.com/mwgroup-io/Doppelganger_Core/blob/main/images/dop_logo.png)
@@ -6,8 +8,6 @@ Doppelgänger Core is a professional-grade RFID card cloning and analysis tool d
 
 ## Getting Started
 To purchase the Doppelganger Longrange RFID Development Board head over to the [Practical Physical Exploitation Store](https://store.physicalexploit.com/). For detailed documentation on how to install, setup, and use the Doppelganger Longrange RFID Development Board visit the [Practical Physical Exploitation Product Documentation](https://physicalexploit.com/docs/products/rfid/doppelganger_development_board/).
-
-![Doppelganger_DEV_Board](https://store.physicalexploit.com/cdn/shop/files/DSC05101.jpg)
 
 ## Hardware Specifications
 
