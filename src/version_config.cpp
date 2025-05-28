@@ -14,4 +14,4 @@ const int C_PIN_LED = 11; // GPIO for the LED (OUTPUT)
 
 // WiFiManager Configurations
 const char *defaultPASS = "UndertheRadar";
-const char *prefixSSID = "doppelgänger_";
+const char *prefixSSID = "doppelganger_";
