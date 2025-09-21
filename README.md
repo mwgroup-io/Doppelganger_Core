@@ -197,6 +197,78 @@ For detialed guidance on device usage, reference the [Product Documentation](htt
 
 ![Haptic Sensor](https://store.physicalexploit.com/cdn/shop/files/d_core_gpio_settings.jpg)
 
+## Updating Firmware
+
+There are three supported ways to update the firmware on Doppelgänger Core.
+
+### Option 1: Use prebuilt installers from Releases (recommended)
+
+1. Download the latest installer for your OS from the Releases page: [GitHub Releases](https://github.com/mwgroup-io/Doppelganger_Core/releases)
+2. Connect your ESP32-S3 board via USB.
+3. Run the downloaded installer for your platform (file name similar to `Core_firmware_<version>_<os>_<arch>`):
+   - macOS: make executable and run
+     ```bash
+     chmod +x ./Core_firmware_<version>_darwin_<arch>
+     ./Core_firmware_<version>_darwin_<arch>
+     ```
+   - Linux: make executable and run
+     ```bash
+     chmod +x ./Core_firmware_<version>_linux_<arch>
+     ./Core_firmware_<version>_linux_<arch>
+     ```
+   - Windows: run the `.exe` file
+4. Select the suggested ESP32 serial port when prompted and follow on-screen instructions.
+
+Notes:
+- On macOS, you may need to allow execution (System Settings > Privacy & Security) if the binary was quarantined. Alternatively:
+  ```bash
+  xattr -d com.apple.quarantine ./Core_firmware_<version>_darwin_<arch>
+  ```
+- USB drivers are typically not required for ESP32-S3; if needed, install the appropriate USB-to-serial driver for your OS.
+
+### Option 2: Build the updater locally (builder + flasher)
+
+1. From the project root, run the updater build script:
+   ```bash
+   ./d_core_updater/build_update_binaries.sh
+   # or with verbose logs
+   ./d_core_updater/build_update_binaries.sh -v
+   ```
+2. After success, installers are located at:
+   - `d_core_updater/build/installers_<version>_<timestamp>/`
+3. Run the appropriate installer for your OS (same steps as in Option 1).
+
+### Option 3: Manual update with PlatformIO (developer workflow)
+
+1. Build the application and filesystem:
+   ```bash
+   platformio run --environment esp32-s3-devkitc-1
+   platformio run --target buildfs --environment esp32-s3-devkitc-1
+   ```
+2. Upload the firmware and filesystem directly with PlatformIO:
+   ```bash
+   # Upload application
+   platformio run --target upload --environment esp32-s3-devkitc-1
+   # Upload filesystem (LittleFS)
+   platformio run --target uploadfs --environment esp32-s3-devkitc-1
+   ```
+3. If you prefer using `esptool`, gather the generated binaries from `.pio/build/esp32-s3-devkitc-1/` and flash with these offsets:
+   ```bash
+   esptool.py --chip esp32s3 --port <port> --baud 460800 \
+     --before default_reset --after hard_reset write_flash -z \
+     --flash_mode qio --flash_freq 80m --flash_size 8MB \
+     0x0000 bootloader.bin \
+     0x8000 partitions.bin \
+     0xE000 boot_app0.bin \
+     0x10000 firmware.bin \
+     0x670000 LittleFS.bin
+   ```
+
+Troubleshooting:
+- Ensure the correct serial port is selected and not in use by another application.
+- Try a different USB cable/port if the device is not detected.
+- For persistent flashing issues, reduce baud to `115200` in `esptool.py` command.
+
 ## Legal Notice
 
 This device is intended for professional penetration testing and authorized security assessments only. Unauthorized or illegal use/possession of this device is the sole responsibility of the user. Mayweather Group LLC, Practical Physical Exploitation, and the creator are not liable for illegal application of this device.

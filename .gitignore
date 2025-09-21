@@ -4,3 +4,6 @@
 .vscode/launch.json
 .vscode/ipch
 .DS_Store
+
+# Do not commit updater build artifacts
+/d_core_updater/build/
