@@ -48,22 +48,24 @@ To purchase the Doppelganger Longrange RFID Development Board head over to the [
 ### Wiegand Formats
 The table below summarizes various card data formats that Doppelganger supports. The bit positions shown represent the internal data portion (excluding any parity bits), and note that implementations may vary based on reader-specific processing.
 
-| Card Type            | Format | Facility Code Bits | Card Number Bits | Notes                  |
-| -------------------- | ------ | ------------------ | ---------------- | ---------------------- |
-| HID H10301           | 26-bit | 8 (1–8)            | 16 (9–24)        | Standard Prox          |
-| Indala               | 26-bit | 8 (1–8)            | 16 (9–25)        | Requires Indala reader |
-| Indala               | 27-bit | 12 (1–12)          | 13 (14–26)       | Requires Indala reader |
-| 2804 WIEGAND         | 28-bit | 8 (4–11)           | 14 (13–26)       | Custom format          |
-| Indala               | 29-bit | 12 (1–12)          | 15 (14–28)       | Requires Indala reader |
-| ATS Wiegand          | 30-bit | 11 (2–12)          | 15 (14–28)       | Custom format          |
-| HID ADT              | 31-bit | 4 (1–4)            | 23 (5–27)        | ADT specific format    |
-| WEI32 (EM4102)       | 32-bit | 15 (1–15)          | 16 (16–31)       | EM4102 format          |
-| HID D10202           | 33-bit | 7 (1–7)            | 24 (8–31)        | Extended format        |
-| HID H10306           | 34-bit | 16 (1–16)          | 16 (17–32)       | Extended format        |
-| HID Corporate 1000   | 35-bit | 12 (2–13)          | 20 (14–33)       | Corporate format       |
-| HID Simplex (S12906) | 36-bit | 8 (1–8)            | 16 (19–34)       | Simplex format         |
-| HID H10304           | 37-bit | 16 (1–16)          | 19 (17–35)       | Extended format        |
-| HID Corporate 1000   | 48-bit | 22 (2–23)          | 23 (24–46)       | Extended Corp format   |
+| Card Type            | Format | Facility Code Bits | Card Number Bits    | Notes                                 |
+| -------------------- | ------ | ------------------ | ------------------- | ------------------------------------- |
+| HID H10301           | 26-bit | 8 (1–8)            | 16 (9–24)           | Standard Prox                         |
+| Indala               | 26-bit | 8 (1–8)            | 16 (9–25)           | Requires Indala reader                |
+| Indala               | 27-bit | 12 (1–12)          | 13 (14–26)          | Requires Indala reader                |
+| 2804 WIEGAND         | 28-bit | 8 (4–11)           | 14 (13–26)          | Custom format                         |
+| Indala               | 29-bit | 12 (1–12)          | 15 (14–28)          | Requires Indala reader                |
+| ATS Wiegand          | 30-bit | 11 (2–12)          | 15 (14–28)          | Custom format                         |
+| HID ADT              | 31-bit | 4 (1–4)            | 23 (5–27)           | ADT specific format                   |
+| WEI32 (EM4102)       | 32-bit | 15 (1–15)          | 16 (16–31)          | EM4102 format                         |
+| HID D10202           | 33-bit | 7 (1–7)            | 24 (8–31)           | Extended format                       |
+| HID H10306           | 34-bit | 16 (1–16)          | 16 (17–32)          | Extended format                       |
+| HID Corporate 1000   | 35-bit | 12 (2–13)          | 20 (14–33)          | Corporate format                      |
+| HID Simplex (S12906) | 36-bit | 8 (1–8)            | 16 (19–34)          | Simplex format                        |
+| HID H10304           | 37-bit | 16 (1–16)          | 19 (17–35)          | Extended format                       |
+| HID H800002          | 46-bit | 14 (1–14)          | 30 (15–44)          | HID H800002 format                    |
+| HID Corporate 1000   | 48-bit | 22 (2–23)          | 23 (24–46)          | Extended Corp format                  |
+| Avigilon Avig56      | 56-bit | Configurable (N)   | Configurable (54−N) | 28/28 parity; site-configurable FC/CN |
 
 ### iCLASS Support
 | Card Type     | Format   | Notes                                                            |

@@ -37,6 +37,9 @@ public:
     String getBinData() const;
     bool isCardValid() const;
 
+    // Debug helpers
+    unsigned long readBitsWindow(unsigned char startInclusive, unsigned char endInclusive) const;
+
 private:
     void getDataStream();
     void getCardValues();

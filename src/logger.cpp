@@ -2,6 +2,7 @@
 #include <LittleFS.h>
 #include <time.h>
 #include <ArduinoJson.h>
+#include "wiegand_interface.h" // For accessing raw databits in debug
 
 enum class MessageType
 {
@@ -72,7 +73,8 @@ void Logger::consoleLog()
              cardProcessor.getBitCount() == 30 || cardProcessor.getBitCount() == 31 ||
              cardProcessor.getBitCount() == 33 || cardProcessor.getBitCount() == 34 ||
              cardProcessor.getBitCount() == 35 || cardProcessor.getBitCount() == 36 ||
-             cardProcessor.getBitCount() == 37 || cardProcessor.getBitCount() == 48 ||
+             cardProcessor.getBitCount() == 37 || cardProcessor.getBitCount() == 46 ||
+             cardProcessor.getBitCount() == 48 || cardProcessor.getBitCount() == 56 ||
              cardProcessor.getBitCount() == 100 || cardProcessor.getBitCount() == 200)
     {
         logCardDataStandard();
@@ -93,7 +95,7 @@ void Logger::logCardDataStandard()
     Serial.print(cardProcessor.getCardNumber());
     Serial.print(", HEX = ");
 
-    if ((cardProcessor.getBitCount() == 28 || 30 || 31 || 33 || 36 || 48) &&
+    if ((cardProcessor.getBitCount() == 28 || 30 || 31 || 33 || 36 || 46 || 48 || 56) &&
         cardProcessor.getBitCount() != 26 && cardProcessor.getBitCount() != 27 &&
         cardProcessor.getBitCount() != 29 && cardProcessor.getBitCount() != 34 &&
         cardProcessor.getBitCount() != 35 && cardProcessor.getBitCount() != 37)
@@ -213,7 +215,7 @@ void Logger::writeCardLog()
         return;
     }
 
-    if ((cardProcessor.getBitCount() == 26 || 27 || 28 || 29 || 30 || 31 || 33 || 34 || 35 || 36 || 37 || 48 || 100 || 200) &&
+    if ((cardProcessor.getBitCount() == 26 || 27 || 28 || 29 || 30 || 31 || 33 || 34 || 35 || 36 || 37 || 46 || 48 || 56 || 100 || 200) &&
         cardProcessor.getBitCount() != 32)
     {
         csvCards.print("DATA_TYPE: CARD");
@@ -221,7 +223,7 @@ void Logger::writeCardLog()
         csvCards.print(cardProcessor.getBitCount());
         csvCards.print(", Hex_Value: ");
 
-        if ((cardProcessor.getBitCount() == 28 || 30 || 31 || 33 || 36 || 48) &&
+        if ((cardProcessor.getBitCount() == 28 || 30 || 31 || 33 || 36 || 46 || 48 || 56) &&
             cardProcessor.getBitCount() != 26 && cardProcessor.getBitCount() != 27 &&
             cardProcessor.getBitCount() != 29 && cardProcessor.getBitCount() != 34 &&
             cardProcessor.getBitCount() != 35 && cardProcessor.getBitCount() != 37)

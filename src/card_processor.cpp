@@ -224,6 +224,22 @@ unsigned long CardProcessor::getBitHolder1() const { return bitHolder1; }
 unsigned long CardProcessor::getCardChunk1() const { return cardChunk1; }
 unsigned long CardProcessor::getDataStream() const { return dataStream; }
 
+unsigned long CardProcessor::readBitsWindow(unsigned char startInclusive, unsigned char endInclusive) const
+{
+    unsigned long value = 0;
+    // Clamp to available range and ensure proper ordering
+    if (endInclusive >= MAX_BITS)
+        endInclusive = MAX_BITS - 1;
+    if (startInclusive > endInclusive)
+        return 0;
+    for (unsigned char i = startInclusive; i <= endInclusive && i < bitCount; ++i)
+    {
+        value <<= 1;
+        value |= databits[i];
+    }
+    return value;
+}
+
 void CardProcessor::getCardValues()
 {
     switch (bitCount)
@@ -608,6 +624,39 @@ void CardProcessor::getCardValues()
         }
         break;
 
+    // HID H800002 46-bit
+    case 46:
+        for (int i = 19; i >= 0; i--)
+        {
+            cardChunk1 &= ~(1UL << i);
+            if (i == 13 || i == 14)
+            {
+                cardChunk1 |= 1UL << i;
+            }
+            else if (i > 14)
+            {
+                // Keep bit cleared
+            }
+            else
+            {
+                cardChunk1 |= ((bitHolder1 >> (i + 18)) & 1UL) << i;
+            }
+        }
+        for (int i = 23; i >= 0; i--)
+        {
+            cardChunk2 &= ~(1UL << i);
+            if (i >= 14)
+            {
+                cardChunk2 |= ((bitHolder1 >> (i - 14)) & 1UL) << i;
+            }
+            else
+            {
+                cardChunk2 |= ((bitHolder2 >> i) & 1UL) << i;
+            }
+        }
+        break;
+
+    // HID Corporate 1000 48-bit
     case 48:
         for (int i = 19; i >= 0; i--)
         {
@@ -631,6 +680,38 @@ void CardProcessor::getCardValues()
             if (i >= 16)
             {
                 cardChunk2 |= ((bitHolder1 >> (i - 16)) & 1UL) << i;
+            }
+            else
+            {
+                cardChunk2 |= ((bitHolder2 >> i) & 1UL) << i;
+            }
+        }
+        break;
+
+    // Avigilon 56-bit (Avig56)
+    case 56:
+        for (int i = 19; i >= 0; i--)
+        {
+            cardChunk1 &= ~(1UL << i);
+            if (i == 13 || i == 17)
+            {
+                cardChunk1 |= 1UL << i;
+            }
+            else if (i > 17)
+            {
+                // Keep bit cleared
+            }
+            else
+            {
+                cardChunk1 |= ((bitHolder1 >> (i + 25)) & 1UL) << i;
+            }
+        }
+        for (int i = 23; i >= 0; i--)
+        {
+            cardChunk2 &= ~(1UL << i);
+            if (i >= 18)
+            {
+                cardChunk2 |= ((bitHolder1 >> (i - 18)) & 1UL) << i;
             }
             else
             {
@@ -827,6 +908,21 @@ void CardProcessor::getFacilityCodeCardNumber()
         }
         break;
 
+    // HID H800002 46-bit
+    case 46:
+        for (i = 1; i < 15; i++)
+        {
+            facilityCode <<= 1;
+            facilityCode |= databits[i];
+        }
+
+        for (i = 15; i < 45; i++)
+        {
+            cardNumber <<= 1;
+            cardNumber |= databits[i];
+        }
+        break;
+
     // HID Corporate 1000 48-bit
     case 48:
         for (i = 2; i < 24; i++)
@@ -840,6 +936,14 @@ void CardProcessor::getFacilityCodeCardNumber()
             cardNumber <<= 1;
             cardNumber |= databits[i];
         }
+        break;
+
+    // Avigilon 56-bit (Avig56)
+    case 56:
+        // From debug windows: readBitsWindow(1,32) forms 0x0022B000 for FC=555, so shift by 12
+        facilityCode = (unsigned long)(readBitsWindow(1, 32) >> 12);
+        // CN observed stable in bits 33..54 in logs
+        cardNumber = readBitsWindow(33, 54);
         break;
     }
 }
