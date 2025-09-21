@@ -6,6 +6,19 @@
 
 Doppelgänger Core is a professional-grade RFID card cloning and analysis tool designed for authorized penetration testing. Built on the ESP32S3 platform, it offers advanced features for capturing and analyzing access control card data while maintaining operational security and ease of use.
 
+## Current Version
+
+- Version: 1.1.0
+- Build Date: 2025-09-21
+
+### Highlights
+- Added HID H800002 46-bit support
+  - Facility Code: 14 bits (bits 1–14)
+  - Card Number: 30 bits (bits 15–44)
+- Added Avigilon Avig56 56-bit support
+  - Default extraction mapping in firmware: FC = bits 1–32 shifted right by 12; CN = bits 33–54
+  - Note: Avigilon ACM allows site-configurable FC/CN lengths within the 54-bit payload
+
 ## Getting Started
 To purchase the Doppelganger Longrange RFID Development Board head over to the [Practical Physical Exploitation Store](https://store.physicalexploit.com/). For detailed documentation on how to install, setup, and use the Doppelganger Longrange RFID Development Board visit the [Practical Physical Exploitation Product Documentation](https://physicalexploit.com/docs/products/rfid/doppelganger_development_board/).
 
