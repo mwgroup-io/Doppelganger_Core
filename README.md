@@ -205,16 +205,16 @@ There are three supported ways to update the firmware on Doppelgänger Core.
 
 1. Download the latest installer for your OS from the Releases page: [GitHub Releases](https://github.com/mwgroup-io/Doppelganger_Core/releases)
 2. Connect your ESP32-S3 board via USB.
-3. Run the downloaded installer for your platform (file name similar to `Core_firmware_<version>_<os>_<arch>`):
+3. Run the downloaded installer for your platform (file name similar to `core_firmware_<version>_<os>_<arch>`):
    - macOS: make executable and run
      ```bash
-     chmod +x ./Core_firmware_<version>_darwin_<arch>
-     ./Core_firmware_<version>_darwin_<arch>
+     chmod +x ./core_firmware_<version>_darwin_<arch>
+     ./core_firmware_<version>_darwin_<arch>
      ```
    - Linux: make executable and run
      ```bash
-     chmod +x ./Core_firmware_<version>_linux_<arch>
-     ./Core_firmware_<version>_linux_<arch>
+     chmod +x ./core_firmware_<version>_linux_<arch>
+     ./core_firmware_<version>_linux_<arch>
      ```
    - Windows: run the `.exe` file
 4. Select the suggested ESP32 serial port when prompted and follow on-screen instructions.
@@ -222,17 +222,18 @@ There are three supported ways to update the firmware on Doppelgänger Core.
 Notes:
 - On macOS, you may need to allow execution (System Settings > Privacy & Security) if the binary was quarantined. Alternatively:
   ```bash
-  xattr -d com.apple.quarantine ./Core_firmware_<version>_darwin_<arch>
+  xattr -d com.apple.quarantine ./core_firmware_<version>_darwin_<arch>
   ```
 - USB drivers are typically not required for ESP32-S3; if needed, install the appropriate USB-to-serial driver for your OS.
+- The updater automatically detects the product type and installs the appropriate firmware.
 
 ### Option 2: Build the updater locally (builder + flasher)
 
 1. From the project root, run the updater build script:
    ```bash
-   ./d_core_updater/build_update_binaries.sh
+   ./d_core_updater/build_binaries.sh
    # or with verbose logs
-   ./d_core_updater/build_update_binaries.sh -v
+   ./d_core_updater/build_binaries.sh -v
    ```
 2. After success, installers are located at:
    - `d_core_updater/build/installers_<version>_<timestamp>/`
