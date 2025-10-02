@@ -100,22 +100,13 @@ func detectProduct(firmwareData []byte) {
 	// Debug: Show what we're looking for
 	logVerbose("Searching for Core identifiers in firmware binary...\n")
 
-	// Try multiple possible variations of how "Core" might appear in the binary
-	coreFound := false
+	// Only look for the specific device declaration to avoid false positives
 	if strings.Contains(firmwareStr, "device = \"Core\"") {
 		logVerbose("Found: device = \"Core\"\n")
-		coreFound = true
-	} else if strings.Contains(firmwareStr, "Core") {
-		logVerbose("Found: Core (generic)\n")
-		coreFound = true
-	} else if strings.Contains(firmwareStr, "core") {
-		logVerbose("Found: core (lowercase)\n")
-		coreFound = true
-	}
-
-	if coreFound {
 		productName = "Core"
 		productDisplayName = "Doppelgänger Core"
+	} else {
+		logVerbose("Core device identifier not found, defaulting to Stealth\n")
 	}
 
 	logVerbose("Detected product: %s (analyzed %d bytes)\n", productDisplayName, len(firmwareData))

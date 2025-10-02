@@ -49,7 +49,7 @@ func main() {
 	tryFlash(espPort)
 
 	fmt.Println("\033[1;32m✓ Firmware update completed successfully!\033[0m")
-	fmt.Printf("\033[1;32m✓ %s should be running the new firmware.\033[0m\n", productDisplayName)
+	fmt.Println("\033[1;32m✓ Device is now running the new firmware.\033[0m")
 	fmt.Println("\033[1;36mNote: Manually power cycle the device before use.\033[0m")
 
 	logVerbose("\033[1;33mCleaning up temporary files...\033[0m\n")
