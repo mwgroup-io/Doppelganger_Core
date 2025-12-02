@@ -41,6 +41,7 @@ extern const int C_PIN_LED; // GPIO for the LED (OUTPUT)
 #define CARDS_CSV_FILE "/www/cards.csv"
 #define RESET_CARD_FILE "/www/reset_card.json"
 #define NOTIFICATION_CONFIG_FILE "/notifications.json"
+#define READER_CONFIG_FILE "/www/reader_config.json"
 
 // WiFiManager Configurations
 extern const char *defaultPASS;

@@ -48,4 +48,25 @@ document.addEventListener("DOMContentLoaded", function () {
       table.innerHTML += row;
     }
   }
+
+  // Update Paxton Reset Card display
+  function updatePaxtonResetTable() {
+    fetch("reset_card.json")
+      .then((response) => response.json())
+      .then((jsonData) => {
+        const paxtonHex = jsonData.PAXTON_RESET_HEX || "0000001337";
+        const paxtonTable = document.getElementById("paxtonResetTable");
+        if (paxtonTable) {
+          paxtonTable.innerHTML = `<tr>
+            <td>${paxtonHex.toUpperCase()}</td>
+          </tr>`;
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating Paxton reset card table:", error);
+      });
+  }
+
+  // Call both update functions
+  updatePaxtonResetTable();
 });

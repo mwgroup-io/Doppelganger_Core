@@ -8,16 +8,31 @@ Doppelgänger Core is a professional-grade RFID card cloning and analysis tool d
 
 ## Current Version
 
-- Version: 1.1.0
-- Build Date: 2025-09-21
+- Version: 1.2.1
+- Build Date: 02DEC2025
 
 ### Highlights
-- Added HID H800002 46-bit support
-  - Facility Code: 14 bits (bits 1–14)
-  - Card Number: 30 bits (bits 15–44)
-- Added Avigilon Avig56 56-bit support
-  - Default extraction mapping in firmware: FC = bits 1–32 shifted right by 12; CN = bits 33–54
-  - Note: Avigilon ACM allows site-configurable FC/CN lengths within the 54-bit payload
+- Added Paxton/Net2 reader support with 75-bit protocol decoding
+- Paxton KP75 keypad support with 55-56 bit keypad frame decoding
+- HID/Paxton mode switching without device restart
+- Paxton reset card support for WiFi credential clearing
+- Enhanced CSV logging with card format identification
+- Web UI for reader mode configuration
+- Added AWID 50-bit card format support
+  - Facility Code: 16 bits (bits 1–16)
+  - Card Number: 32 bits (bits 17–48)
+- Improved card data reporting and analysis
+
+### Version 1.2.1 (02DEC2025)
+- Fixed Paxton keypad press detection and decoding
+- Improved Net2 frame processing with non-blocking timeout mechanism
+- Enhanced notification support for all card types (HID and Paxton)
+- Added email notifications for Paxton keypad presses
+- Optimized interrupt handling for rapid keypad entry sequences
+- Fixed card completion detection for 55-56 bit keypad frames
+
+### Acknowledgments
+Special thanks to [@00Waz](https://github.com/00Waz) and [@jkramarz](https://github.com/jkramarz) for the Paxtogeddon project, which was instrumental in understanding processing logic. Additional thanks to [@en4rab](https://github.com/en4rab) for sharing additional Paxton resources with the community.
 
 ## Getting Started
 To purchase the Doppelganger Longrange RFID Development Board head over to the [Practical Physical Exploitation Store](https://store.physicalexploit.com/). For detailed documentation on how to install, setup, and use the Doppelganger Longrange RFID Development Board visit the [Practical Physical Exploitation Product Documentation](https://physicalexploit.com/docs/products/rfid/doppelganger_development_board/).
@@ -78,18 +93,26 @@ The table below summarizes various card data formats that Doppelganger supports.
 | HID H10304           | 37-bit | 16 (1–16)          | 19 (17–35)          | Extended format                       |
 | HID H800002          | 46-bit | 14 (1–14)          | 30 (15–44)          | HID H800002 format                    |
 | HID Corporate 1000   | 48-bit | 22 (2–23)          | 23 (24–46)          | Extended Corp format                  |
+| AWID 50              | 50-bit | 16 (1–16)          | 32 (17–48)          | AWID extended format                  |
 | Avigilon Avig56      | 56-bit | Configurable (N)   | Configurable (54−N) | 28/28 parity; site-configurable FC/CN |
 
+### Paxton/Net2 Support
+| Card Type   | Format | Notes                           |
+| ----------- | ------ | ------------------------------- |
+| Paxton Net2 | 75-bit | Net2 Fobs / Cards, EM Card Data |
+
 ### iCLASS Support
-| Card Type     | Format   | Notes                                                            |
-| ------------- | -------- | ---------------------------------------------------------------- |
-| iCLASS Legacy | Standard | Legacy 2k/16k cards                                              |
-| iCLASS SE     | Standard | Secure Element cards                                             |
-| iCLASS Seos   | Standard | Latest generation secure cards                                   |
-| PIV/MF Cards  | 32-bit   | UID extraction Only as that is what is provided in the datasteam |
+| Card Type     | Format   | Notes                                                             |
+| ------------- | -------- | ----------------------------------------------------------------- |
+| iCLASS Legacy | Standard | Legacy 2k/16k cards                                               |
+| iCLASS SE     | Standard | Secure Element cards                                              |
+| iCLASS Seos   | Standard | Latest generation secure cards                                    |
+| PIV/MF Cards  | 32-bit   | UID extraction Only as that is what is provided in the datastream |
 
 ### Additional Features
-* Keypad PIN Support (4-bit)
+* Keypad PIN Support
+  * HID keypad: 4-bit Wiegand protocol
+  * Paxton KP75 keypad: 55-56 bit Net2 protocol with automatic key detection
 * Raw binary data capture
 * HEX data conversion
 * Automatic format detection
@@ -104,6 +127,8 @@ The table below summarizes various card data formats that Doppelganger supports.
 * HID MaxiProx 5375AGN00
 * HID ICLASS SE R90 940NTNTEK00000 (with legacy support enabled)
 * HID Indala ASR-620++ (No Longer Manufactured by HID)
+* Paxton Net2 Proximity Readers (75-bit protocol)
+* Paxton KP75 Keypads (55-56 bit keypad frame protocol)
 
 ### Required Components
 | Item                                              | Qty |
@@ -193,6 +218,7 @@ For detialed guidance on device usage, reference the [Product Documentation](htt
 * **Real-time Notifications**: Email alerts, webhook support, web notifications
 * **Professional Interface**: Modern web UI, real-time display, advanced exports
 * **Detailed Logging**: Comprehensive debug information and card data analysis
+* **Keypad Support**: HID 4-bit and Paxton 55-56 bit keypad capture with PIN sequence aggregation
 * **GPIO**: Configurable GPIO for integrating haptic or other sensors
 
 ![Haptic Sensor](https://store.physicalexploit.com/cdn/shop/files/d_core_gpio_settings.jpg)

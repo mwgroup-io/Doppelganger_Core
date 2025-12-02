@@ -1,6 +1,6 @@
 /*
  * Doppelgänger Core
- * Version 1.0.0 (22MAR2025)
+ * Version 1.2.1 (02DEC2025)
  * Copyright: Mayweather Group LLC
  * Written by Travis Weathers (@tweathers-sec)
  *
@@ -19,6 +19,8 @@
 #include "wifi_setup_manager.h"
 #include "version_config.h"
 #include "wiegand_interface.h"
+#include "net2_interface.h"
+#include "reader_manager.h"
 #include "gpio_manager.h"
 #include <ArduinoJson.h>
 #include <ESPAsyncWebServer.h>
@@ -39,6 +41,8 @@ extern ResetCardManager resetCardManager;
 extern DebugManager debugManager;
 extern WiFiSetupManager &wifiSetupManager;
 extern WiegandInterface &wiegandInterface;
+extern Net2Interface &net2Interface;
+extern ReaderManager &readerManager;
 extern NotificationManager &notificationManager;
 extern CardEventHandler &cardEventHandler;
 extern GPIOManager &gpioManager;
@@ -87,7 +91,7 @@ void setup()
   ResetManager::getInstance().begin();
 
   logger.logGPIOStatus("Preparing GPIO configuration...");
-  wiegandInterface.begin();
+  readerManager.begin();
   cardProcessor.reset();
   logger.logGPIOStatus("GPIO configuration complete and ready");
 
@@ -267,6 +271,11 @@ void loop()
 
   GPIOManager::getInstance().loop();
 
+  if (readerManager.isPaxtonMode())
+  {
+    net2Interface.processTimeout();
+  }
+
   cardProcessor.processCard();
 
   if (cardProcessor.isReadComplete())
@@ -274,12 +283,19 @@ void loop()
     logger.consoleLog();
     resetCardManager.checkResetCard(cardProcessor);
 
-    if (cardProcessor.getBitCount() == 4)
+    if (cardProcessor.isKeypadPress())
     {
+      // Paxton keypad press (55-56 bit)
+      cardEventHandler.handleKeypadEvent(cardProcessor);
+    }
+    else if (cardProcessor.getBitCount() == 4)
+    {
+      // 4-bit HID keypad entry
       cardEventHandler.handlePinEvent(cardProcessor);
     }
     else
     {
+      // Standard card read (HID or Net2)
       cardEventHandler.handleCardEvent(cardProcessor);
     }
 

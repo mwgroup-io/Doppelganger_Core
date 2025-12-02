@@ -46,6 +46,26 @@ Copyright: @tweathers-sec and Mayweather Group LLC
 
     <div class="wrapper">
         <div class="section-header">
+            <h4>Reader Configuration</h4>
+        </div>
+        <div class="theme-toggle">
+            <p>Current Reader Type: <span id="current-reader-type">Loading...</span></p>
+        </div>
+        <div class="theme-toggle">
+            <select id="reader-select">
+                <option value="HID">HID Global</option>
+                <option value="PAXTON">Paxton</option>
+            </select>
+        </div>
+        <div class="button-container">
+            <button type="button" class="update-button" onclick="processReaderForm();">Submit</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="wrapper">
+        <div class="section-header">
             <h4>Theme</h4>
         </div>
         <div class="theme-toggle">
@@ -71,43 +91,80 @@ Copyright: @tweathers-sec and Mayweather Group LLC
         <div class="section-header">
             <h4>WiFi Reset Card</h4>
         </div>
-        <table class="content-table">
-            <tr>
-                <th class="content-head" data-column="RBL" data-order="desc">
-                    Bit Length
-                </th>
-                <th class="content-head" data-column="RFC" data-order="desc">
-                    Facility Code
-                </th>
-                <th class="content-head" data-column="SCN" data-order="desc">
-                    Card Number
-                </th>
-            </tr>
-            <tbody id="cardTable"></tbody>
-        </table>
+        <!-- HID Reset Card Section -->
+        <div id="hid-reset-section">
+            <p style="margin: 8px 0; font-weight: bold;">HID Reset Card:</p>
+            <table class="content-table">
+                <tr>
+                    <th class="content-head" data-column="RBL" data-order="desc">
+                        Bit Length
+                    </th>
+                    <th class="content-head" data-column="RFC" data-order="desc">
+                        Facility Code
+                    </th>
+                    <th class="content-head" data-column="RCN" data-order="desc">
+                        Card Number
+                    </th>
+                </tr>
+                <tbody id="cardTable"></tbody>
+            </table>
 
-        <button type="button" class="update-button" onclick="toggleResetCardVisibility();">Modify Reset Card</button>
+            <button type="button" class="update-button" onclick="toggleResetCardVisibility();">Modify HID Reset
+                Card</button>
 
-        <form class="resetCardForm">
-            <div class="row">
-                <div class="input-group">
-                    <label for="bit_length">Bit Length:</label>
-                    <input type="text" id="bit_length" name="bit_length" value="">
+            <form class="resetCardForm" style="display: none;">
+                <div class="row">
+                    <div class="column">
+                        <div class="input-group">
+                            <label for="bit_length">Bit Length:</label>
+                            <input type="text" id="bit_length" name="bit_length" value="" placeholder="35">
+                        </div>
+                        <div class="input-group">
+                            <label for="facility_code">Facility Code:</label>
+                            <input type="text" id="facility_code" name="facility_code" value="" placeholder="111">
+                        </div>
+                        <div class="input-group">
+                            <label for="card_number">Card Number:</label>
+                            <input type="text" id="card_number" name="card_number" value="" placeholder="4444">
+                        </div>
+                        <div class="button-container">
+                            <button type="button" class="update-button"
+                                onclick="processResetCardForm();">Submit</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="facility_code">Facility Code:</label>
-                    <input type="text" id="facility_code" name="facility_code" value="">
+            </form>
+        </div>
+
+        <!-- Paxton Reset Card Section -->
+        <div id="paxton-reset-section">
+            <p style="margin: 8px 0; font-weight: bold;">Paxton Reset Card:</p>
+            <table class="content-table">
+                <tr>
+                    <th class="content-head">HEX Value</th>
+                </tr>
+                <tbody id="paxtonResetTable"></tbody>
+            </table>
+
+            <button type="button" class="update-button" onclick="togglePaxtonResetVisibility();">Modify Paxton Reset
+                Card</button>
+
+            <form class="paxtonResetForm" style="display: none;">
+                <div class="row">
+                    <div class="column">
+                        <div class="input-group">
+                            <label for="paxton_reset_hex">HEX Value:</label>
+                            <input type="text" id="paxton_reset_hex" name="paxton_reset_hex" value="" maxlength="10"
+                                placeholder="0000001337" style="text-transform: uppercase;">
+                        </div>
+                        <div class="button-container">
+                            <button type="button" class="update-button"
+                                onclick="processPaxtonResetForm();">Submit</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="card_number">Card Number:</label>
-                    <input type="text" id="card_number" name="card_number" value="">
-                </div>
-                <div class="button-container">
-                    <button type="button" class="update-button centered"
-                        onclick="processResetCardForm();">Submit</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <hr>
@@ -249,6 +306,7 @@ Copyright: @tweathers-sec and Mayweather Group LLC
     <script src="js/theme.js"></script>
     <script src="js/system_info.js"></script>
     <script src="js/gpio_config.js"></script>
+    <script src="js/reader_config.js"></script>
 
     <script>
         function changeTheme(theme) {

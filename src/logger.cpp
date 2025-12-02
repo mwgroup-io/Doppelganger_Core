@@ -3,6 +3,7 @@
 #include <time.h>
 #include <ArduinoJson.h>
 #include "wiegand_interface.h" // For accessing raw databits in debug
+#include "keypad_processor.h"
 
 enum class MessageType
 {
@@ -60,22 +61,30 @@ const char *Logger::getCurrentTime()
 void Logger::consoleLog()
 {
     Serial.println("======================================================================");
-    if (cardProcessor.getBitCount() == 4)
+
+    unsigned int bits = cardProcessor.getBitCount();
+
+    if (cardProcessor.isKeypadPress())
+    {
+        logCardDataKeypad();
+    }
+    else if (cardProcessor.isNet2Card())
+    {
+        logCardDataNet2();
+    }
+    else if (bits == 4)
     {
         logCardDataPIN();
     }
-    else if (cardProcessor.getBitCount() == 32)
+    else if (bits == 35)
     {
         logCardDataPIV();
     }
-    else if (cardProcessor.getBitCount() == 26 || cardProcessor.getBitCount() == 27 ||
-             cardProcessor.getBitCount() == 28 || cardProcessor.getBitCount() == 29 ||
-             cardProcessor.getBitCount() == 30 || cardProcessor.getBitCount() == 31 ||
-             cardProcessor.getBitCount() == 33 || cardProcessor.getBitCount() == 34 ||
-             cardProcessor.getBitCount() == 35 || cardProcessor.getBitCount() == 36 ||
-             cardProcessor.getBitCount() == 37 || cardProcessor.getBitCount() == 46 ||
-             cardProcessor.getBitCount() == 48 || cardProcessor.getBitCount() == 56 ||
-             cardProcessor.getBitCount() == 100 || cardProcessor.getBitCount() == 200)
+    else if (bits == 26 || bits == 32 || bits == 37)
+    {
+        logCardDataStandard();
+    }
+    else if (bits > 0)
     {
         logCardDataStandard();
     }
@@ -85,35 +94,41 @@ void Logger::consoleLog()
     }
 }
 
+void Logger::logCardDataNet2()
+{
+    Serial.print("[CARD READ] Format: ");
+    Serial.print(cardProcessor.getCardFormat());
+    Serial.print(", FC = ");
+    Serial.print(cardProcessor.getFacilityCode());
+    Serial.print(", CN = ");
+    Serial.print(cardProcessor.getCardNumber());
+    Serial.print(", HEX = ");
+    Serial.print(cardProcessor.getNet2HexEM410x());
+    Serial.print(", BIN = ");
+    Serial.println(cardProcessor.getDataStreamBIN());
+}
+
 void Logger::logCardDataStandard()
 {
-    Serial.print("[CARD READ] Card Bits: ");
+    Serial.print("[CARD READ] Format: ");
+    Serial.print(cardProcessor.getCardFormat());
+    Serial.print(", Bits: ");
     Serial.print(cardProcessor.getBitCount());
     Serial.print(", FC = ");
     Serial.print(cardProcessor.getFacilityCode());
     Serial.print(", CN = ");
     Serial.print(cardProcessor.getCardNumber());
     Serial.print(", HEX = ");
-
-    if ((cardProcessor.getBitCount() == 28 || 30 || 31 || 33 || 36 || 46 || 48 || 56) &&
-        cardProcessor.getBitCount() != 26 && cardProcessor.getBitCount() != 27 &&
-        cardProcessor.getBitCount() != 29 && cardProcessor.getBitCount() != 34 &&
-        cardProcessor.getBitCount() != 35 && cardProcessor.getBitCount() != 37)
-    {
-        Serial.print(cardProcessor.getCsvHEX());
-    }
-    else if (cardProcessor.getBitCount() == 26 || 27 || 29 || 34 || 35 || 37)
-    {
-        Serial.print(cardProcessor.getCsvHEX());
-    }
-
+    Serial.print(cardProcessor.getCsvHEX());
     Serial.print(", BIN = ");
     Serial.println(cardProcessor.getDataStreamBIN());
 }
 
 void Logger::logCardDataPIV()
 {
-    Serial.print("[CARD READ] Card Bits: ");
+    Serial.print("[CARD READ] Format: ");
+    Serial.print(cardProcessor.getCardFormat());
+    Serial.print(", Bits: ");
     if (cardProcessor.getFacilityCode() >= 256)
     {
         Serial.print("PIV/MF");
@@ -139,20 +154,35 @@ void Logger::logCardDataPIV()
     }
 }
 
+void Logger::logCardDataKeypad()
+{
+    int keyNum = cardProcessor.getKeypadNumber();
+    Serial.print("[PAXTON PIN] Format: ");
+    Serial.print(cardProcessor.getCardFormat());
+    Serial.print(", Key = ");
+    Serial.print(keypadProcessor.getKeyChar(keyNum));
+    Serial.print(", HEX = ");
+    Serial.print(cardProcessor.getCsvHEX());
+    Serial.print(", BIN = ");
+    Serial.println(cardProcessor.getDataStreamBIN());
+}
+
 void Logger::logCardDataPIN()
 {
+    Serial.print("[PIN READ] Format: ");
+    Serial.print(cardProcessor.getCardFormat());
+    Serial.print(", Code = ");
     if (cardProcessor.getBitHolder1() == 10)
     {
-        Serial.print("[PIN READ] PIN Code = *");
+        Serial.print("*");
     }
     else if (cardProcessor.getBitHolder1() == 11)
     {
-        Serial.print("[PIN READ] PIN Code = #");
+        Serial.print("#");
     }
     else if (cardProcessor.getBitHolder1() >= 0 && cardProcessor.getBitHolder1() <= 9)
     {
-        Serial.print("[PIN READ] PIN Code = ");
-        Serial.print(cardProcessor.getCardChunk1(), HEX);
+        Serial.print(cardProcessor.getBitHolder1());
     }
     Serial.print(", BIN = ");
     Serial.println(cardProcessor.getDataStreamBIN());
@@ -190,12 +220,9 @@ void Logger::logCardDataError()
     csvCards.print("DATA_TYPE: NO_PARSER");
     csvCards.print(", Bit_Length: ");
     csvCards.print(cardProcessor.getBitCount());
-    csvCards.print(", Hex_Value: ");
-    csvCards.print(cardProcessor.getCsvHEX());
-    csvCards.print(", Facility_Code: ");
-    csvCards.print(cardProcessor.getFacilityCode(), DEC);
-    csvCards.print(", Card_Number: ");
-    csvCards.print(cardProcessor.getCardNumber(), DEC);
+    csvCards.print(", Hex_Value: N/A");
+    csvCards.print(", Facility_Code: N/A");
+    csvCards.print(", Card_Number: N/A");
     csvCards.print(", BIN: ");
     csvCards.print(cardProcessor.getDataStreamBIN());
     csvCards.print("\n");
@@ -215,26 +242,37 @@ void Logger::writeCardLog()
         return;
     }
 
-    if ((cardProcessor.getBitCount() == 26 || 27 || 28 || 29 || 30 || 31 || 33 || 34 || 35 || 36 || 37 || 46 || 48 || 56 || 100 || 200) &&
-        cardProcessor.getBitCount() != 32)
+    if (cardProcessor.isNet2Card())
+    {
+        csvCards.print("DATA_TYPE: PAXTON");
+        csvCards.print(", Format: ");
+        csvCards.print(cardProcessor.getCardFormat());
+        csvCards.print(", Bit_Length: 75");
+        csvCards.print(", Hex_Value: ");
+        csvCards.print(cardProcessor.getNet2HexEM410x());
+        csvCards.print(", Facility_Code: N/A");
+        csvCards.print(", Card_Number: ");
+        csvCards.print(cardProcessor.getCardNumber(), DEC);
+        csvCards.print(", BIN: ");
+        csvCards.print(cardProcessor.getDataStreamBIN());
+    }
+    else if ((cardProcessor.getBitCount() == 26 || cardProcessor.getBitCount() == 27 ||
+              cardProcessor.getBitCount() == 28 || cardProcessor.getBitCount() == 29 ||
+              cardProcessor.getBitCount() == 30 || cardProcessor.getBitCount() == 31 ||
+              cardProcessor.getBitCount() == 33 || cardProcessor.getBitCount() == 34 ||
+              cardProcessor.getBitCount() == 35 || cardProcessor.getBitCount() == 36 ||
+              cardProcessor.getBitCount() == 37 || cardProcessor.getBitCount() == 46 ||
+              cardProcessor.getBitCount() == 48 || cardProcessor.getBitCount() == 50 ||
+              cardProcessor.getBitCount() == 56) &&
+             cardProcessor.getBitCount() != 32)
     {
         csvCards.print("DATA_TYPE: CARD");
+        csvCards.print(", Format: ");
+        csvCards.print(cardProcessor.getCardFormat());
         csvCards.print(", Bit_Length: ");
         csvCards.print(cardProcessor.getBitCount());
         csvCards.print(", Hex_Value: ");
-
-        if ((cardProcessor.getBitCount() == 28 || 30 || 31 || 33 || 36 || 46 || 48 || 56) &&
-            cardProcessor.getBitCount() != 26 && cardProcessor.getBitCount() != 27 &&
-            cardProcessor.getBitCount() != 29 && cardProcessor.getBitCount() != 34 &&
-            cardProcessor.getBitCount() != 35 && cardProcessor.getBitCount() != 37)
-        {
-            csvCards.print(cardProcessor.getCsvHEX());
-        }
-        else if (cardProcessor.getBitCount() == 26 || 27 || 29 || 34 || 35 || 37)
-        {
-            csvCards.print(cardProcessor.getCsvHEX());
-        }
-
+        csvCards.print(cardProcessor.getCsvHEX());
         csvCards.print(", Facility_Code: ");
         csvCards.print(cardProcessor.getFacilityCode(), DEC);
         csvCards.print(", Card_Number: ");
@@ -245,6 +283,8 @@ void Logger::writeCardLog()
     else if (cardProcessor.getBitCount() == 32)
     {
         csvCards.print("DATA_TYPE: CARD");
+        csvCards.print(", Format: ");
+        csvCards.print(cardProcessor.getCardFormat());
         csvCards.print(", Bit_Length: ");
         if (cardProcessor.getFacilityCode() >= 256)
         {
@@ -268,6 +308,23 @@ void Logger::writeCardLog()
         csvCards.print(", BIN: ");
         csvCards.print(cardProcessor.getDataStreamBIN());
     }
+    else
+    {
+        csvCards.print("DATA_TYPE: UNKNOWN_FORMAT");
+        csvCards.print(", Format: ");
+        csvCards.print(cardProcessor.getCardFormat());
+        csvCards.print(", Bit_Length: ");
+        csvCards.print(cardProcessor.getBitCount());
+        csvCards.print(", Hex_Value: ");
+        csvCards.print(cardProcessor.getCsvHEX());
+        csvCards.print(", Facility_Code: ");
+        csvCards.print(cardProcessor.getFacilityCode(), DEC);
+        csvCards.print(", Card_Number: ");
+        csvCards.print(cardProcessor.getCardNumber(), DEC);
+        csvCards.print(", BIN: ");
+        csvCards.print(cardProcessor.getDataStreamBIN());
+    }
+
     csvCards.print("\n");
     csvCards.close();
 }
@@ -305,11 +362,42 @@ void Logger::writePinLog()
     }
 
     csvCards.print("DATA_TYPE: KEYPAD");
+    csvCards.print(", Format: ");
+    csvCards.print(cardProcessor.getCardFormat());
     csvCards.print(", Bit_Length: PIN");
     csvCards.print(", Hex_Value: N/A");
     csvCards.print(", Facility_Code: N/A");
     csvCards.print(", Card_Number: ");
     csvCards.print(pinCode);
+    csvCards.print(", BIN: ");
+    csvCards.print(cardProcessor.getDataStreamBIN());
+    csvCards.print("\n");
+    csvCards.close();
+}
+
+void Logger::writeKeypadLog()
+{
+    File csvCards = LittleFS.open(CARDS_CSV_FILE, "a");
+
+    if (!csvCards)
+    {
+        Serial.println("[LOG] Error: Unable to open cards.csv for Paxton keypad logging");
+        return;
+    }
+
+    int keyNum = cardProcessor.getKeypadNumber();
+    String keyChar = keypadProcessor.getKeyChar(keyNum);
+
+    csvCards.print("DATA_TYPE: PAXTON_KEYPAD");
+    csvCards.print(", Format: ");
+    csvCards.print(cardProcessor.getCardFormat());
+    csvCards.print(", Bit_Length: ");
+    csvCards.print(cardProcessor.getBitCount());
+    csvCards.print(", Hex_Value: ");
+    csvCards.print(cardProcessor.getCsvHEX());
+    csvCards.print(", Facility_Code: N/A");
+    csvCards.print(", Key_Press: ");
+    csvCards.print(keyChar);
     csvCards.print(", BIN: ");
     csvCards.print(cardProcessor.getDataStreamBIN());
     csvCards.print("\n");

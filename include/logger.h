@@ -21,6 +21,7 @@ public:
     void consoleLog();
     void writeCardLog();
     void writePinLog();
+    void writeKeypadLog();
     void logStartupBanner(const char *device, const char *version, const char *builddate, const char *hardware);
     void logWiFiInfo(const char *ssid, IPAddress ip, IPAddress gateway, const char *mac, int rssi);
     void logResetCardInfo(const char *resetCardFile);
@@ -36,9 +37,11 @@ public:
     void logDebugStatus(const char *message);
 
 private:
+    void logCardDataNet2();
     void logCardDataStandard();
     void logCardDataPIV();
     void logCardDataPIN();
+    void logCardDataKeypad();
     void logCardDataError();
 
     // Constructor and destructor

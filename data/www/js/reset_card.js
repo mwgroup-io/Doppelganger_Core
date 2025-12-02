@@ -6,6 +6,7 @@ let resetCardConfig = {
   RBL: "",
   RFC: "",
   RCN: "",
+  PAXTON_RESET_HEX: "",
 };
 
 // Register reset card message handler
@@ -46,6 +47,7 @@ function updateResetCardTable() {
         bit_length: data.RBL || "",
         facility_code: data.RFC || "",
         card_number: data.RCN || "",
+        paxton_reset_hex: data.PAXTON_RESET_HEX || "0000001337",
       };
 
       Object.entries(formFields).forEach(([id, value]) => {
@@ -54,6 +56,17 @@ function updateResetCardTable() {
           element.value = value;
         }
       });
+
+      // Update Paxton Reset Card display
+      const paxtonHex = data.PAXTON_RESET_HEX || "0000001337";
+      const paxtonTable = document.getElementById("paxtonResetTable");
+      if (paxtonTable) {
+        paxtonTable.innerHTML = `
+          <tr>
+            <td>${paxtonHex.toUpperCase()}</td>
+          </tr>
+        `;
+      }
     })
     .catch((error) => {
       console.error("Error fetching reset card settings:", error);
@@ -115,7 +128,10 @@ function processResetCardForm() {
     window.alert("Reset card settings have been updated.");
 
     // Hide the form
-    document.querySelector(".resetCardForm").classList.remove("visible");
+    const form = document.querySelector(".resetCardForm");
+    if (form) {
+      form.style.display = "none";
+    }
 
     // Update the table after a short delay
     setTimeout(updateResetCardTable, 1000);
@@ -130,21 +146,104 @@ function processResetCardForm() {
 function showResetCardForm() {
   const form = document.querySelector(".resetCardForm");
   if (form) {
-    form.classList.add("visible");
+    form.style.display = "block";
   }
 }
 
 function hideResetCardForm() {
   const form = document.querySelector(".resetCardForm");
   if (form) {
-    form.classList.remove("visible");
+    form.style.display = "none";
   }
 }
 
 function toggleResetCardVisibility() {
   const form = document.querySelector(".resetCardForm");
   if (form) {
-    form.classList.toggle("visible");
+    if (form.style.display === "none") {
+      form.style.display = "block";
+    } else {
+      form.style.display = "none";
+    }
+  }
+}
+
+// Function to validate Paxton reset card hex input
+function validatePaxtonResetInput(hexValue) {
+  var errors = [];
+
+  // Check if hex value is exactly 10 characters
+  if (hexValue.length !== 10) {
+    errors.push("HEX value must be exactly 10 characters");
+  }
+
+  // Check if hex value contains only valid hex characters (0-9, A-F)
+  var hexRegex = /^[0-9A-Fa-f]+$/;
+  if (!hexRegex.test(hexValue)) {
+    errors.push(
+      "HEX value must contain only hexadecimal characters (0-9, A-F)"
+    );
+  }
+
+  return errors;
+}
+
+// Function to toggle Paxton reset card form visibility
+function togglePaxtonResetVisibility() {
+  var form = document.querySelector(".paxtonResetForm");
+  if (form.style.display === "none") {
+    form.style.display = "block";
+  } else {
+    form.style.display = "none";
+  }
+}
+
+// Function to process Paxton reset card form
+function processPaxtonResetForm() {
+  // Get form input
+  var hexValue = document
+    .getElementById("paxton_reset_hex")
+    .value.toUpperCase();
+
+  // Validate input
+  var errors = validatePaxtonResetInput(hexValue);
+
+  if (errors.length === 0) {
+    // Prepare data object
+    var formData = {
+      PAXTON_RESET_HEX: hexValue,
+    };
+
+    // Send data via WebSocket
+    sendData(formData);
+
+    // Display success message
+    var successMessage = "Paxton Reset Card has been updated to: " + hexValue;
+    window.alert(successMessage);
+
+    // Wait a moment for the file to be written, then update the display
+    setTimeout(function () {
+      updateResetCardTable();
+      var paxtonTable = document.getElementById("paxtonResetTable");
+      if (paxtonTable) {
+        paxtonTable.innerHTML = `
+          <tr>
+            <td>${hexValue}</td>
+          </tr>
+        `;
+      }
+    }, 1000);
+
+    // Hide the form
+    var form = document.querySelector(".paxtonResetForm");
+    if (form) {
+      form.style.display = "none";
+    }
+  } else {
+    var errorMessage =
+      "Invalid Paxton HEX value. Please check the following issues:\n";
+    errorMessage += errors.map((error) => `• ${error}`).join("\n");
+    window.alert(errorMessage);
   }
 }
 
@@ -154,6 +253,8 @@ window.hideResetCardForm = hideResetCardForm;
 window.showResetCardForm = showResetCardForm;
 window.toggleResetCardVisibility = toggleResetCardVisibility;
 window.processResetCardForm = processResetCardForm;
+window.togglePaxtonResetVisibility = togglePaxtonResetVisibility;
+window.processPaxtonResetForm = processPaxtonResetForm;
 
 // Initialize when the page loads
 document.addEventListener("DOMContentLoaded", function () {
@@ -161,9 +262,13 @@ document.addEventListener("DOMContentLoaded", function () {
   ensureWebSocket();
   updateResetCardTable();
 
-  // Ensure form is hidden initially
+  // Ensure forms are hidden initially
   const form = document.querySelector(".resetCardForm");
   if (form) {
-    form.classList.remove("visible");
+    form.style.display = "none";
+  }
+  const paxtonForm = document.querySelector(".paxtonResetForm");
+  if (paxtonForm) {
+    paxtonForm.style.display = "none";
   }
 });

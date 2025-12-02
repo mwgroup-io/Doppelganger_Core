@@ -1,4 +1,9 @@
 #include "card_processor.h"
+#include "wiegand_interface.h"
+#include "net2_interface.h"
+#include "reader_manager.h"
+#include "gpio_manager.h"
+#include "keypad_processor.h"
 
 // Global instance definition - must be before any other code
 CardProcessor cardProcessor;
@@ -32,8 +37,10 @@ void CardProcessor::reset()
     dataStreamBIN = "";
     flagDone = 0;
     weigand_counter = WEIGAND_WAIT_TIME;
-    binData = "";
     cardValid = false;
+    isNet2 = false;
+    isKeypad = false;
+    keypadNumber = -1;
 
     for (int i = 0; i < MAX_BITS; i++)
     {
@@ -75,6 +82,84 @@ void CardProcessor::handleGPIOOnCardRead()
     if (pin36OnCardRead)
     {
         GPIOManager::getInstance().pulsePin36();
+    }
+}
+
+void CardProcessor::processNet2Frame()
+{
+    // Snapshot bits under interrupt lock for reliability
+    noInterrupts();
+
+    unsigned int bc = net2BitCount;
+    if (bc > NET2_MAX_BITS)
+        bc = NET2_MAX_BITS;
+
+    unsigned char bitsCopy[NET2_MAX_BITS];
+    for (unsigned int i = 0; i < bc; i++)
+        bitsCopy[i] = net2Bits[i];
+
+    // Immediately clear and reset for next frame (critical for rapid PIN entry)
+    net2FrameActive = false;
+    net2BitCount = 0;
+    net2FrameReady = false;
+    net2LastClockMicros = 0;
+
+    interrupts();
+
+    // Check if this is a keypad frame (55-56 bits)
+    if (bc >= 55 && bc <= 56)
+    {
+        int keyNum = -1;
+
+        if (keypadProcessor.decodeKeypadFrame(bitsCopy, bc, &keyNum))
+        {
+            isKeypad = true;
+            isNet2 = false;
+            bitCount = bc;
+            keypadNumber = keyNum;
+
+            // Store hex pattern for logging
+            csvHEX = keypadProcessor.getLastHexPattern();
+
+            // Create binary representation for logging
+            char binBuf[128];
+            for (unsigned int i = 0; i < bc && i < 127; i++)
+            {
+                binBuf[i] = bitsCopy[i] ? '1' : '0';
+            }
+            binBuf[bc] = '\0';
+            dataStreamBIN = binBuf;
+
+            cardValid = true;
+            flagDone = 1;
+            return;
+        }
+    }
+
+    // Check if this is a card frame (75 bits)
+    unsigned long cardID = 0;
+    unsigned long long fullID = 0;
+
+    if (net2Interface.decode75(bitsCopy, bc, &cardID, &fullID))
+    {
+        isNet2 = true;
+        isKeypad = false;
+        bitCount = 75;
+        facilityCode = 0;
+        cardNumber = cardID;
+
+        char binBuf[76];
+        unsigned int binLen = (bc < 75) ? bc : 75;
+        for (unsigned int i = 0; i < binLen; i++)
+        {
+            binBuf[i] = bitsCopy[i] ? '1' : '0';
+        }
+        binBuf[binLen] = '\0';
+        dataStreamBIN = binBuf;
+
+        csvHEX = net2HexEM410x;
+        cardValid = true;
+        flagDone = 1;
     }
 }
 
@@ -162,55 +247,202 @@ void CardProcessor::pivParse()
 
 void CardProcessor::processCard()
 {
-    if (!flagDone)
+    if (readerManager.isPaxtonMode())
     {
-        if (--weigand_counter == 0)
+        // Quick check - process immediately if frame is ready
+        if (net2FrameReady && net2BitCount >= NET2_MIN_BITS)
         {
-            flagDone = 1;
+            processNet2Frame();
+            return;
+        }
+
+        // Check for timeout on incomplete frames
+        if (net2BitCount >= NET2_MIN_BITS && net2BitCount > 0)
+        {
+            unsigned long now = micros();
+            if ((now - net2LastClockMicros) > NET2_FRAME_TIMEOUT_US)
+            {
+                processNet2Frame();
+            }
         }
     }
-
-    if (bitCount > 0 && flagDone)
+    else
     {
-        getDataStream();
-        getCardValues();
-        getFacilityCodeCardNumber();
-        if (bitCount == 32 && facilityCode >= 256)
+        if (!flagDone)
         {
-            pivParse();
+            if (--weigand_counter == 0)
+            {
+                flagDone = 1;
+            }
         }
 
-        // Store BIN data
-        binData = dataStreamBIN;
-        cardValid = true;
-
-        // Handle GPIO control on valid card read
-        if (cardValid)
+        if (bitCount > 0 && flagDone)
         {
-            handleGPIOOnCardRead();
-        }
+            isNet2 = false;
+            getDataStream();
+            getCardValues();
+            getFacilityCodeCardNumber();
 
-        // For PIN entries, add a small delay to ensure reliable processing
-        if (bitCount == 4)
-        {
-            delay(10); // Small delay for PIN entries
+            // Generate HEX string based on card type
+            if ((bitCount == 28 || bitCount == 30 || bitCount == 31 || bitCount == 33 ||
+                 bitCount == 36 || bitCount == 48) &&
+                bitCount != 26 && bitCount != 27 && bitCount != 29 && bitCount != 34 &&
+                bitCount != 35 && bitCount != 37 && bitCount != 46 && bitCount != 56)
+            {
+                csvHEX = String(dataStream, HEX);
+                csvHEX.toUpperCase();
+            }
+            else if (bitCount == 26 || bitCount == 27 || bitCount == 29 || bitCount == 34 ||
+                     bitCount == 35 || bitCount == 37 || bitCount == 46 || bitCount == 56)
+            {
+                csvHEX = String(cardChunk1, HEX) + String(cardChunk2, HEX);
+                csvHEX.toUpperCase();
+            }
+            else if (bitCount == 32)
+            {
+                if (facilityCode >= 256)
+                {
+                    pivParse();
+                }
+                else
+                {
+                    csvHEX = String(cardChunk1, HEX) + String(cardChunk2, HEX);
+                    csvHEX.toUpperCase();
+                }
+            }
+            else
+            {
+                csvHEX = String(cardChunk1, HEX) + String(cardChunk2, HEX);
+                csvHEX.toUpperCase();
+            }
+
+            cardValid = true;
+
+            if (cardValid)
+            {
+                handleGPIOOnCardRead();
+            }
+
+            if (bitCount == 4)
+            {
+                delay(10);
+            }
         }
     }
 }
 
 bool CardProcessor::isReadComplete() const
 {
-    return (bitCount > 0 && flagDone);
+    if (readerManager.isPaxtonMode())
+    {
+        return ((bitCount == 75 || (bitCount >= 55 && bitCount <= 56)) && flagDone);
+    }
+    else
+    {
+        return (bitCount > 0 && flagDone);
+    }
 }
 
 String CardProcessor::getBinData() const
 {
-    return binData;
+    return dataStreamBIN;
 }
 
 bool CardProcessor::isCardValid() const
 {
     return cardValid;
+}
+
+String CardProcessor::getCardFormat() const
+{
+    switch (bitCount)
+    {
+    case 4:
+        return "PIN";
+    case 55:
+        if (isKeypad)
+        {
+            return "PIN";
+        }
+        return "Unknown";
+    case 26:
+        return "H10301/Ind26/AWID26";
+    case 27:
+        return "H10307/Ind27";
+    case 28:
+        return "2804W";
+    case 29:
+        return "Ind29";
+    case 30:
+        return "ATSW30";
+    case 31:
+        return "ADT31";
+    case 32:
+        if (facilityCode >= 256)
+        {
+            return "PIV/MiFare/FASC-N";
+        }
+        return "WIE32/EM";
+    case 33:
+        return "D10202";
+    case 34:
+        return "H10306";
+    case 35:
+        return "C1k35s (C-1000)";
+    case 36:
+        return "S12906";
+    case 37:
+        return "H10304";
+    case 38:
+        return "BQT38/ISCS";
+    case 39:
+        return "PW39";
+    case 40:
+        return "P10001/Casi40/Verkada40/BC40/AWID40";
+    case 46:
+        return "H800002";
+    case 48:
+        return "C1k48s (C-1000)";
+    case 50:
+        return "AWID50";
+    case 56:
+        if (isKeypad)
+        {
+            return "PIN";
+        }
+        return "Avig56";
+    case 64:
+        return "H10309";
+    case 75:
+        return "Net2/EM";
+    default:
+        return "Unknown";
+    }
+}
+
+String CardProcessor::getNet2HexEM410x() const
+{
+    return net2HexEM410x;
+}
+
+String CardProcessor::getNet2HexEM4100() const
+{
+    return net2HexEM4100;
+}
+
+bool CardProcessor::isNet2Card() const
+{
+    return isNet2;
+}
+
+bool CardProcessor::isKeypadPress() const
+{
+    return isKeypad;
+}
+
+int CardProcessor::getKeypadNumber() const
+{
+    return keypadNumber;
 }
 
 // Getters
@@ -938,12 +1170,30 @@ void CardProcessor::getFacilityCodeCardNumber()
         }
         break;
 
+    // AWID 50-bit
+    case 50:
+        for (i = 1; i < 17; i++) // FC: bits 1-16
+        {
+            facilityCode <<= 1;
+            facilityCode |= databits[i];
+        }
+        for (i = 17; i < 49; i++) // CN: bits 17-48
+        {
+            cardNumber <<= 1;
+            cardNumber |= databits[i];
+        }
+        break;
+
     // Avigilon 56-bit (Avig56)
     case 56:
         // From debug windows: readBitsWindow(1,32) forms 0x0022B000 for FC=555, so shift by 12
         facilityCode = (unsigned long)(readBitsWindow(1, 32) >> 12);
         // CN observed stable in bits 33..54 in logs
         cardNumber = readBitsWindow(33, 54);
+        break;
+
+    // Net2 cards
+    case 75:
         break;
     }
 }

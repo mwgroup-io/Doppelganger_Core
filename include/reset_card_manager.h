@@ -14,10 +14,11 @@ public:
     void checkResetCard(CardProcessor &cardProcessor);
     void setDefaultResetCard();
     void resetStoredWiFi();
+    bool readResetCardConfig(int &resetBL, int &resetFC, int &resetCN, String &paxtonHex);
 
 private:
-    static const char *RESET_CARD_FILE;
     bool readResetCardConfig(int &resetBL, int &resetFC, int &resetCN);
+    bool readPaxtonResetCard(String &paxtonHex);
 };
 
 extern ResetCardManager resetCardManager; // Global instance declaration

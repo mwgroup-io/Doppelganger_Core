@@ -1296,6 +1296,8 @@ code {
 .notificationsForm .input-group select,
 .resetCardForm .input-group input,
 .resetCardForm .input-group select,
+.paxtonResetForm .input-group input,
+.paxtonResetForm .input-group select,
 .gpioForm .input-group input,
 .gpioForm .input-group select,
 select#theme-select,
@@ -1319,6 +1321,7 @@ select#debug-select {
 /* Custom dropdown arrow */
 .notificationsForm .input-group select,
 .resetCardForm .input-group select,
+.paxtonResetForm .input-group select,
 .gpioForm .input-group select,
 select#theme-select,
 select#debug-select {

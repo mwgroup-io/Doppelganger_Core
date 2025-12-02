@@ -1,7 +1,7 @@
 #include "reset_card_manager.h"
 #include <WiFiManager.h>
-
-const char *ResetCardManager::RESET_CARD_FILE = "/www/reset_card.json";
+#include "version_config.h"
+#include "reader_manager.h"
 
 ResetCardManager::ResetCardManager() {}
 
@@ -22,6 +22,7 @@ void ResetCardManager::setDefaultResetCard()
     json["RBL"] = 35;
     json["RFC"] = 111;
     json["RCN"] = 4444;
+    json["PAXTON_RESET_HEX"] = "0000001337";
 
     File resetCardFile = LittleFS.open(RESET_CARD_FILE, "w");
     if (!resetCardFile)
@@ -40,6 +41,12 @@ void ResetCardManager::setDefaultResetCard()
 }
 
 bool ResetCardManager::readResetCardConfig(int &resetBL, int &resetFC, int &resetCN)
+{
+    String dummyPaxtonHex;
+    return readResetCardConfig(resetBL, resetFC, resetCN, dummyPaxtonHex);
+}
+
+bool ResetCardManager::readResetCardConfig(int &resetBL, int &resetFC, int &resetCN, String &paxtonHex)
 {
     if (!LittleFS.exists(RESET_CARD_FILE))
     {
@@ -68,22 +75,75 @@ bool ResetCardManager::readResetCardConfig(int &resetBL, int &resetFC, int &rese
     resetBL = jsonDoc["RBL"];
     resetFC = jsonDoc["RFC"];
     resetCN = jsonDoc["RCN"];
+    paxtonHex = jsonDoc["PAXTON_RESET_HEX"] | "0000001337";
+    return true;
+}
+
+bool ResetCardManager::readPaxtonResetCard(String &paxtonHex)
+{
+    if (!LittleFS.exists(RESET_CARD_FILE))
+    {
+        Serial.println("[RESET] JSON file not found");
+        return false;
+    }
+
+    File configFile = LittleFS.open(RESET_CARD_FILE, "r");
+    if (!configFile)
+    {
+        Serial.println("[RESET] Failed to open config file");
+        return false;
+    }
+
+    String configData = configFile.readString();
+    configFile.close();
+
+    JsonDocument jsonDoc;
+    DeserializationError error = deserializeJson(jsonDoc, configData);
+    if (error)
+    {
+        Serial.println("[RESET] Failed to parse config");
+        return false;
+    }
+
+    paxtonHex = jsonDoc["PAXTON_RESET_HEX"] | "0000001337";
     return true;
 }
 
 void ResetCardManager::checkResetCard(CardProcessor &cardProcessor)
 {
-    int resetBL, resetFC, resetCN;
-    if (!readResetCardConfig(resetBL, resetFC, resetCN))
+    if (readerManager.isPaxtonMode())
     {
-        return;
+        // Check for Paxton reset card
+        String paxtonHex;
+        if (!readPaxtonResetCard(paxtonHex))
+        {
+            return;
+        }
+        
+        String cardHex = cardProcessor.getNet2HexEM410x();
+        if (cardHex.equalsIgnoreCase(paxtonHex))
+        {
+            Serial.println("======================================================================");
+            Serial.println("[RESET] Paxton Reset Card detected!");
+            resetStoredWiFi();
+        }
     }
-
-    if (cardProcessor.getBitCount() == resetBL &&
-        cardProcessor.getFacilityCode() == resetFC &&
-        cardProcessor.getCardNumber() == resetCN)
+    else
     {
-        resetStoredWiFi();
+        // Check for HID reset card
+        int resetBL, resetFC, resetCN;
+        String dummyPaxtonHex;
+        if (!readResetCardConfig(resetBL, resetFC, resetCN, dummyPaxtonHex))
+        {
+            return;
+        }
+
+        if (cardProcessor.getBitCount() == resetBL &&
+            cardProcessor.getFacilityCode() == resetFC &&
+            cardProcessor.getCardNumber() == resetCN)
+        {
+            resetStoredWiFi();
+        }
     }
 }
 
