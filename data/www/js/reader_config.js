@@ -40,6 +40,5 @@ function processReaderForm() {
   }, 1000);
 }
 
-// Load reader config when page loads
 document.addEventListener("DOMContentLoaded", loadReaderConfig);
 

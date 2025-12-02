@@ -19,7 +19,6 @@ String KeypadProcessor::binaryToHex(volatile unsigned char *bits, unsigned int b
 {
     String hexStr = "";
 
-    // Convert bits to bytes and then to hex
     for (unsigned int i = 0; i < bitCount; i += 8)
     {
         unsigned char byte = 0;
@@ -44,7 +43,6 @@ bool KeypadProcessor::decodeKeypadFrame(volatile unsigned char *bits, unsigned i
         return false;
     }
 
-    // Find actual data by trimming leading and trailing zeros
     int firstOne = -1;
     int lastOne = -1;
 
@@ -63,7 +61,6 @@ bool KeypadProcessor::decodeKeypadFrame(volatile unsigned char *bits, unsigned i
     {
         int dataLength = lastOne - firstOne + 1;
 
-        // Convert data portion to hex for comparison
         String dataHex = "";
         for (int i = 0; i < dataLength; i += 4)
         {
@@ -82,8 +79,6 @@ bool KeypadProcessor::decodeKeypadFrame(volatile unsigned char *bits, unsigned i
             return false;
         }
 
-        // Match known Paxton KP75 key press patterns
-        // Note: Some keys have multiple valid patterns due to timing/signal variations
         int detectedKey = -1;
 
         if (dataHex.startsWith("D1C337"))
@@ -97,7 +92,7 @@ bool KeypadProcessor::decodeKeypadFrame(volatile unsigned char *bits, unsigned i
         else if (dataHex.startsWith("D1C20"))
         {
             detectedKey = 1;
-        } // Alternate for 1
+        }
         else if (dataHex.startsWith("D1C307"))
         {
             detectedKey = 2;

@@ -1,7 +1,6 @@
 // Author: @tweathers-sec
 // Copyright: @tweathers-sec and Mayweather Group LLC
 
-// Function to fetch firmware version
 async function getFirmwareVersion() {
   try {
     const response = await fetch("/firmware");
@@ -10,7 +9,6 @@ async function getFirmwareVersion() {
     }
     const data = await response.json();
 
-    // Update all system information
     document.getElementById("deviceInfo").textContent =
       data.device || "Unknown";
     document.getElementById("firmwareVersion").textContent =
@@ -25,5 +23,4 @@ async function getFirmwareVersion() {
   }
 }
 
-// Call getFirmwareVersion when the page loads
 document.addEventListener("DOMContentLoaded", getFirmwareVersion);

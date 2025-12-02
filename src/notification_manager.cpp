@@ -11,14 +11,12 @@ NotificationManager &NotificationManager::getInstance()
 
 void NotificationManager::begin()
 {
-    // No need to read email config here as it's already done by emailManager
 }
 
 void NotificationManager::handleCardRead(const char *cardData)
 {
     if (emailManager.isConfigured())
     {
-        // Parse card data from CSV format
         String data = String(cardData);
         int firstComma = data.indexOf(',');
         int secondComma = data.indexOf(',', firstComma + 1);
@@ -33,7 +31,6 @@ void NotificationManager::handleCardRead(const char *cardData)
             String csvHEX = data.substring(thirdComma + 1, fourthComma);
             String binData = data.substring(fourthComma + 1);
 
-            // Send email notification with original format
             emailManager.sendCardData(bitCount, facilityCode, cardNumber, WiFi.SSID(), binData, csvHEX, "");
         }
     }
@@ -44,7 +41,6 @@ void NotificationManager::handlePinRead(const char *pinData)
 {
     if (emailManager.isConfigured())
     {
-        // Parse pin data from CSV format
         String data = String(pinData);
         int comma = data.indexOf(',');
         if (comma != -1)
@@ -52,7 +48,6 @@ void NotificationManager::handlePinRead(const char *pinData)
             String pinCode = data.substring(0, comma);
             String binData = data.substring(comma + 1);
 
-            // Send email notification with original format
             emailManager.sendPinData(pinCode, WiFi.SSID(), binData);
         }
     }
@@ -71,12 +66,10 @@ void NotificationManager::handleWebNotification(const char *data)
 
 void NotificationManager::updateSettings(const char *data)
 {
-    // Parse notification settings from JSON
     JsonDocument doc;
     DeserializationError error = deserializeJson(doc, data);
     if (!error)
     {
-        // Update email settings
         if (doc["enable_email"].is<bool>())
         {
             emailManager.readConfig();
@@ -86,27 +79,22 @@ void NotificationManager::updateSettings(const char *data)
 
 void NotificationManager::processNotification(const char *data)
 {
-    // Process notification data and send to appropriate channels
 }
 
 void NotificationManager::sendEmailNotification(const char *subject, const char *body)
 {
     if (emailManager.isConfigured())
     {
-        // For general notifications, we'll use sendCardData with a special format
         emailManager.sendCardData(0, 0, 0, WiFi.SSID(), body, "", "");
     }
 }
 
 void NotificationManager::sendWebhookNotification(const char *data)
 {
-    // Implement webhook notification logic
 }
 
 void NotificationManager::sendWebNotification(const char *data)
 {
-    // Implement web notification logic
 }
 
-// Define global instance
 NotificationManager &notificationManager = NotificationManager::getInstance();

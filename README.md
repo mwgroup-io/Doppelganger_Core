@@ -32,7 +32,7 @@ Doppelgänger Core is a professional-grade RFID card cloning and analysis tool d
 - Fixed card completion detection for 55-56 bit keypad frames
 
 ### Acknowledgments
-Special thanks to [@00Waz](https://github.com/00Waz) and [@jkramarz](https://github.com/jkramarz) for the Paxtogeddon project, which was instrumental in understanding processing logic. Additional thanks to [@en4rab](https://github.com/en4rab) for sharing additional Paxton resources with the community.
+Special thanks to [@00Waz](https://github.com/00Waz), [@jkramarz](https://github.com/jkramarz) and Dr0pR00t (Daniel Raines) for their work on the [Paxtogeddon](https://github.com/00Waz/Paxtogeddon-Reader) project, which was instrumental in understanding processing logic even after I spent thousands on purchasing Paxton controller, software, and fobs/cards. Additional thanks to [@en4rab](https://github.com/en4rab) for sharing additional Paxton resources with the community.
 
 ## Getting Started
 To purchase the Doppelganger Longrange RFID Development Board head over to the [Practical Physical Exploitation Store](https://store.physicalexploit.com/). For detailed documentation on how to install, setup, and use the Doppelganger Longrange RFID Development Board visit the [Practical Physical Exploitation Product Documentation](https://physicalexploit.com/docs/products/rfid/doppelganger_development_board/).

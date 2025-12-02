@@ -3,7 +3,6 @@
 #include "gpio_manager.h"
 #include "card_processor.h"
 
-// Declare external notification manager instance
 extern NotificationManager &notificationManager;
 extern ReaderManager &readerManager;
 extern CardProcessor cardProcessor;
@@ -359,7 +358,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             JsonDocument resetDoc;
             String existingPaxtonHex = "0000001337";
             
-            // Read existing file to preserve Paxton reset hex if it exists
             if (resetCardFile)
             {
                 String existingData = resetCardFile.readString();
@@ -410,7 +408,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
             String hex = doc["PAXTON_RESET_HEX"].as<String>();
             hex.toUpperCase();
             
-            // Validate hex format (must be 10 characters, hex only)
             if (hex.length() != 10)
             {
                 JsonDocument response;

@@ -145,7 +145,6 @@ function parseCSV(csvData, paxton) {
     }
   });
 
-  // If the CSV ends with keypad data, add them as one row
   if (keypadCNs.length > 0) {
     if (paxton) {
       data.push({ TYPE: "PIN", TOKEN: keypadCNs.join(""), HEX: "N/A" });

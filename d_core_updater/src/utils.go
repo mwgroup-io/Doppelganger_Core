@@ -60,13 +60,11 @@ func cleanupLogFiles() {
 	}
 }
 
-// fileExists checks if a file exists
 func fileExists(filename string) bool {
 	_, err := os.Stat(filename)
 	return !os.IsNotExist(err)
 }
 
-// askUserConfirmation prompts for yes/no confirmation
 func askUserConfirmation(prompt string) bool {
 	fmt.Print(prompt)
 	var response string
@@ -75,7 +73,6 @@ func askUserConfirmation(prompt string) bool {
 	return response == "y" || response == "yes"
 }
 
-// clearScreen clears the terminal
 func clearScreen() {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
@@ -88,13 +85,10 @@ func clearScreen() {
 	cmd.Run()
 }
 
-// detectProduct analyzes the firmware binary to determine the product type
 func detectProduct(firmwareData []byte) {
-	// Default to Stealth for backward compatibility
 	productName = "Stealth"
 	productDisplayName = "Doppelgänger Stealth v2"
 
-	// Check if firmware contains Core device identifier
 	firmwareStr := string(firmwareData)
 
 	// Debug: Show what we're looking for

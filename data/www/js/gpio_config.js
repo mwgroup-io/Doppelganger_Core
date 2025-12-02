@@ -11,17 +11,14 @@ let gpioConfig = {
   pin36_pulse_duration: 1000,
 };
 
-// Register GPIO message handler
 registerHandler("gpio", function (data) {
   updateGPIOStatus();
 });
 
-// Function to update the GPIO status display
 function updateGPIOStatus() {
   fetch("gpio_settings.json")
     .then((response) => response.json())
     .then((data) => {
-      // Update status display
       document.getElementById("pin35-status").textContent = data.pin35_enabled
         ? "Enabled"
         : "Disabled";
@@ -33,7 +30,6 @@ function updateGPIOStatus() {
       document.getElementById("pin36-duration").textContent =
         data.pin36_pulse_duration;
 
-      // Update form fields
       document.getElementById("pin35_status").value = data.pin35_enabled
         ? "enabled"
         : "disabled";
@@ -112,7 +108,6 @@ function processGPIOForm() {
     // Hide the form
     document.querySelector(".gpioForm").classList.remove("visible");
 
-    // Update the status display after a short delay
     setTimeout(updateGPIOStatus, 1000);
   } else {
     const errorMessage =
@@ -129,13 +124,10 @@ function toggleGPIOVisibility() {
   }
 }
 
-// Initialize when the page loads
 document.addEventListener("DOMContentLoaded", function () {
-  // Ensure we have a WebSocket connection
   ensureWebSocket();
   updateGPIOStatus();
 
-  // Ensure form is hidden initially
   const form = document.querySelector(".gpioForm");
   if (form) {
     form.classList.remove("visible");

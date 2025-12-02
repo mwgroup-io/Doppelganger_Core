@@ -1,7 +1,6 @@
 // Author: @tweathers-sec
 // Copyright: @tweathers-sec and Mayweather Group LLC
 
-// Function to update notification status display
 function updateNotificationStatus() {
   fetch("/notifications")
     .then((response) => response.json())
@@ -14,7 +13,6 @@ function updateNotificationStatus() {
           data.enable_email === "true" ? "Enabled" : "Disabled";
       }
 
-      // Update form fields if they exist
       const formFields = {
         enable_email: data.enable_email,
         smtp_host: data.smtp_host || "",
@@ -41,7 +39,6 @@ function updateNotificationStatus() {
     });
 }
 
-// Function to show the notifications form
 function showNotificationsForm() {
   const form = document.querySelector(".notificationsForm");
   if (form) {
@@ -49,12 +46,10 @@ function showNotificationsForm() {
   }
 }
 
-// Function to hide the notifications form
 function hideNotificationsForm() {
   const form = document.querySelector(".notificationsForm");
   if (form) {
     form.classList.remove("visible");
-    // Clear password field for security
     const passField = document.getElementById("smtp_pass");
     if (passField) {
       passField.value = "";
@@ -62,7 +57,6 @@ function hideNotificationsForm() {
   }
 }
 
-// Function to toggle notifications form visibility
 function toggleNotificationsVisibility() {
   const form = document.querySelector(".notificationsForm");
   if (form) {
@@ -74,7 +68,6 @@ function toggleNotificationsVisibility() {
   }
 }
 
-// Function to process the notifications form
 function processNotificationsForm() {
   const formData = {
     source: "notifications",
@@ -97,15 +90,12 @@ function processNotificationsForm() {
     alert("Notifications have been disabled.");
   }
 
-  // Send data and ensure UI is updated
   sendData(formData);
   hideNotificationsForm();
 
-  // Update the status after a short delay to allow the server to process
   setTimeout(updateNotificationStatus, 500);
 }
 
-// Register notification message handler
 registerHandler("notifications", function (data) {
   if (data.status === "success") {
     updateNotificationStatus();
@@ -117,14 +107,12 @@ registerHandler("notifications", function (data) {
   }
 });
 
-// Make functions globally available
 window.updateNotificationStatus = updateNotificationStatus;
 window.hideNotificationsForm = hideNotificationsForm;
 window.showNotificationsForm = showNotificationsForm;
 window.toggleNotificationsVisibility = toggleNotificationsVisibility;
 window.processNotificationsForm = processNotificationsForm;
 
-// Initialize when the page loads
 document.addEventListener("DOMContentLoaded", function () {
   updateNotificationStatus();
 });

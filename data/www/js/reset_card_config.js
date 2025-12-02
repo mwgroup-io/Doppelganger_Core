@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Update Paxton Reset Card display
   function updatePaxtonResetTable() {
     fetch("reset_card.json")
       .then((response) => response.json())
@@ -67,6 +66,5 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Call both update functions
   updatePaxtonResetTable();
 });

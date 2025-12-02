@@ -237,7 +237,6 @@ type LinuxSerialPort struct {
 }
 
 func listSerialPortsLinux() []string {
-	// Get detailed information about serial ports on Linux
 	linuxPorts := getLinuxSerialPortDetails()
 
 	var ports []string
@@ -277,7 +276,6 @@ func getLinuxSerialPortDetails() []LinuxSerialPort {
 		}
 	}
 
-	// Method 3: Direct file system check (fallback)
 	commonPorts := []string{"/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyUSB0", "/dev/ttyUSB1"}
 	for _, devicePath := range commonPorts {
 		if _, err := os.Stat(devicePath); err == nil {
@@ -295,7 +293,6 @@ func analyzeLinuxPort(devicePath string) LinuxSerialPort {
 		IsESP32:    false,
 	}
 
-	// Try to get USB device information using udevadm
 	cmd := exec.Command("udevadm", "info", "-q", "property", "-n", devicePath)
 	output, err := cmd.Output()
 	if err == nil {
@@ -311,7 +308,6 @@ func analyzeLinuxPort(devicePath string) LinuxSerialPort {
 		}
 	}
 
-	// Check if this is likely an ESP32 device
 	port.IsESP32 = isLikelyESP32DeviceLinux(port.VendorID, port.ProductID, port.Description)
 
 	return port
@@ -319,16 +315,14 @@ func analyzeLinuxPort(devicePath string) LinuxSerialPort {
 
 func isLikelyESP32DeviceLinux(vendorID, productID, description string) bool {
 	// Known ESP32 VID/PID combinations
-	esp32VIDs := []string{"303A", "10C4", "0403", "1A86"}
+	esp32VIDs := []string{"303A", "10C4", "0403", "1A86"	}
 
-	// Check VID
 	for _, vid := range esp32VIDs {
 		if strings.EqualFold(vendorID, vid) {
 			return true
 		}
 	}
 
-	// Check for ESP32 keywords in description
 	esp32Keywords := []string{"esp32", "espressif", "cp210", "ch340", "ftdi"}
 	descriptionLower := strings.ToLower(description)
 	for _, keyword := range esp32Keywords {
@@ -363,7 +357,6 @@ type WindowsSerialPort struct {
 }
 
 func listSerialPortsWindows() []string {
-	// Get detailed information about serial ports on Windows
 	windowsPorts := getWindowsSerialPortDetails()
 
 	var ports []string
@@ -377,7 +370,6 @@ func listSerialPortsWindows() []string {
 func getWindowsSerialPortDetails() []WindowsSerialPort {
 	var ports []WindowsSerialPort
 
-	// Use PowerShell to get detailed COM port information including VID/PID
 	psScript := `
 	Get-CimInstance -ClassName Win32_SerialPort | ForEach-Object {
 		$pnpEntity = Get-CimInstance -ClassName Win32_PnPEntity | Where-Object { $_.Name -eq $_.Description }

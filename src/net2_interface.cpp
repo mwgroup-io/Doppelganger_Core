@@ -92,21 +92,18 @@ bool Net2Interface::decode75(volatile unsigned char *bits, unsigned int bitCount
     if (bitCount != 75)
         return false;
 
-    // Verify lead-in (first 10 bits must be zero)
     for (int i = 0; i < 10; i++)
     {
         if (bits[i] != 0)
             return false;
     }
 
-    // Verify lead-out (last 10 bits must be zero)
     for (int i = 65; i < 75; i++)
     {
         if (bits[i] != 0)
             return false;
     }
 
-    // Parse 11 nibbles: B + 8 digits + F + LRC
     int nibbles[11];
     int lrc[4] = {0, 0, 0, 0};
     String cardNumberStr = "";
@@ -124,7 +121,6 @@ bool Net2Interface::decode75(volatile unsigned char *bits, unsigned int bitCount
         int nibbleVal = (8 * b3) + (4 * b2) + (2 * b1) + (1 * b0);
         nibbles[nibbleIdx] = nibbleVal;
 
-        // Verify row parity (odd)
         int rowSum = b0 + b1 + b2 + b3;
         int expectedParity = (rowSum % 2 == 0) ? 1 : 0;
 
@@ -140,15 +136,12 @@ bool Net2Interface::decode75(volatile unsigned char *bits, unsigned int bitCount
         }
     }
 
-    // Verify start nibble (0xB)
     if (nibbles[0] != 11)
         return false;
 
-    // Verify stop nibble (0xF)
     if (nibbles[9] != 15)
         return false;
 
-    // Verify column parity (LRC)
     int lrcExpected = ((lrc[0] % 2 == 0) ? 0 : 1) |
                       (((lrc[1] % 2 == 0) ? 0 : 1) << 1) |
                       (((lrc[2] % 2 == 0) ? 0 : 1) << 2) |

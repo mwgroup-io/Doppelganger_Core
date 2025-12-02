@@ -61,7 +61,6 @@ func tryFlash(espPort string) {
 	os.Stdout.Sync()
 }
 
-// applyOffsetsFromIdeData reads PlatformIO idedata.json and updates offsets
 func applyOffsetsFromIdeData() bool {
 	buildDir := "../.pio/build/esp32-s3-devkitc-1/idedata.json"
 	f, err := os.ReadFile(buildDir)
@@ -83,7 +82,6 @@ func applyOffsetsFromIdeData() bool {
 		return false
 	}
 
-	// Update offsets based on idedata.json
 	for _, img := range data.Extra.FlashImages {
 		switch {
 		case strings.HasSuffix(img.Path, "bootloader.bin"):
@@ -109,7 +107,6 @@ func flashAllSegments(espPort string, eraseFlash bool, flashMode string, flashFr
 	esptoolCmd := getEsptoolCommand()
 	logVerbose("\033[1;36mUsing esptool command: %s\033[0m\n", esptoolCmd)
 
-	// Verify files exist
 	needed := []string{"bootloader.bin", "partitions.bin", "boot_app0.bin", "firmware.bin", "LittleFS.bin"}
 	for _, f := range needed {
 		if !fileExists(f) {
@@ -117,7 +114,6 @@ func flashAllSegments(espPort string, eraseFlash bool, flashMode string, flashFr
 		}
 	}
 
-	// Get correct syntax based on esptool version
 	beforeReset, afterReset, writeFlash, eraseFlashCmd, flashModeArg, flashFreqArg, flashSizeArg := getEsptoolArgs(esptoolCmd, false)
 	logVerbose("\033[1;36mUsing esptool args: --before %s --after %s %s\033[0m\n", beforeReset, afterReset, writeFlash)
 
@@ -142,7 +138,6 @@ func flashAllSegments(espPort string, eraseFlash bool, flashMode string, flashFr
 		}
 	}
 
-	// Single transaction write-flash with all segments in correct order/offsets
 	args := append([]string{}, baseArgs...)
 	if !useStub {
 		args = append(args, "--no-stub")
@@ -177,18 +172,15 @@ func flashAllSegments(espPort string, eraseFlash bool, flashMode string, flashFr
 	}
 	s.Stop()
 	if err := cmd.Wait(); err != nil {
-		// Only retry with safer settings if we're not already using them
 		if flashMode != "dio" || flashFreq != "40m" || baud != "115200" || useStub {
 			fmt.Printf("\033[1;31mwrite-flash failed: %v\033[0m\n", err)
 			fmt.Println("\033[1;33mRetrying with safer settings (DIO/40m, lower baud, --no-stub) ...\033[0m")
-			// Retry path: switch to DIO/40m and 115200 baud, no stub
 			safeMode := "dio"
 			safeFreq := "40m"
 			safeBaud := "115200"
 			flashAllSegments(espPort, false, safeMode, safeFreq, safeBaud, false)
 			return
 		}
-		// If we're already using safe settings and still failing, propagate the error
 		panic(fmt.Sprintf("write-flash failed with safe settings: %v", err))
 	}
 }

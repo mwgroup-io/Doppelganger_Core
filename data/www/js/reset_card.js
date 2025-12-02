@@ -1,7 +1,6 @@
 // Author: @tweathers-sec
 // Copyright: @tweathers-sec and Mayweather Group LLC
 
-// Reset Card Configuration
 let resetCardConfig = {
   RBL: "",
   RFC: "",
@@ -9,7 +8,6 @@ let resetCardConfig = {
   PAXTON_RESET_HEX: "",
 };
 
-// Register reset card message handler
 registerHandler("reset_card", function (data) {
   if (data.status === "success") {
     // 1. Show alert
@@ -18,19 +16,16 @@ registerHandler("reset_card", function (data) {
     // 2. Hide form
     hideResetCardForm();
 
-    // 3. Update table
     updateResetCardTable();
   } else {
     window.alert("Error updating reset card settings.");
   }
 });
 
-// Function to update the reset card table
 function updateResetCardTable() {
   fetch("reset_card.json")
     .then((response) => response.json())
     .then((data) => {
-      // Update table display
       const tableBody = document.getElementById("cardTable");
       if (tableBody) {
         tableBody.innerHTML = `
@@ -42,7 +37,6 @@ function updateResetCardTable() {
         `;
       }
 
-      // Update form fields
       const formFields = {
         bit_length: data.RBL || "",
         facility_code: data.RFC || "",
@@ -57,7 +51,6 @@ function updateResetCardTable() {
         }
       });
 
-      // Update Paxton Reset Card display
       const paxtonHex = data.PAXTON_RESET_HEX || "0000001337";
       const paxtonTable = document.getElementById("paxtonResetTable");
       if (paxtonTable) {
@@ -123,7 +116,6 @@ function processResetCardForm() {
       RCN: parseInt(cardNumber),
     };
 
-    // Send data and update UI immediately
     sendData(formData);
     window.alert("Reset card settings have been updated.");
 
@@ -133,7 +125,6 @@ function processResetCardForm() {
       form.style.display = "none";
     }
 
-    // Update the table after a short delay
     setTimeout(updateResetCardTable, 1000);
   } else {
     const errorMessage =
@@ -168,16 +159,13 @@ function toggleResetCardVisibility() {
   }
 }
 
-// Function to validate Paxton reset card hex input
 function validatePaxtonResetInput(hexValue) {
   var errors = [];
 
-  // Check if hex value is exactly 10 characters
   if (hexValue.length !== 10) {
     errors.push("HEX value must be exactly 10 characters");
   }
 
-  // Check if hex value contains only valid hex characters (0-9, A-F)
   var hexRegex = /^[0-9A-Fa-f]+$/;
   if (!hexRegex.test(hexValue)) {
     errors.push(
@@ -188,7 +176,6 @@ function validatePaxtonResetInput(hexValue) {
   return errors;
 }
 
-// Function to toggle Paxton reset card form visibility
 function togglePaxtonResetVisibility() {
   var form = document.querySelector(".paxtonResetForm");
   if (form.style.display === "none") {
@@ -198,9 +185,7 @@ function togglePaxtonResetVisibility() {
   }
 }
 
-// Function to process Paxton reset card form
 function processPaxtonResetForm() {
-  // Get form input
   var hexValue = document
     .getElementById("paxton_reset_hex")
     .value.toUpperCase();
@@ -209,7 +194,6 @@ function processPaxtonResetForm() {
   var errors = validatePaxtonResetInput(hexValue);
 
   if (errors.length === 0) {
-    // Prepare data object
     var formData = {
       PAXTON_RESET_HEX: hexValue,
     };
@@ -217,11 +201,9 @@ function processPaxtonResetForm() {
     // Send data via WebSocket
     sendData(formData);
 
-    // Display success message
     var successMessage = "Paxton Reset Card has been updated to: " + hexValue;
     window.alert(successMessage);
 
-    // Wait a moment for the file to be written, then update the display
     setTimeout(function () {
       updateResetCardTable();
       var paxtonTable = document.getElementById("paxtonResetTable");
@@ -247,7 +229,6 @@ function processPaxtonResetForm() {
   }
 }
 
-// Make functions globally available
 window.updateResetCardTable = updateResetCardTable;
 window.hideResetCardForm = hideResetCardForm;
 window.showResetCardForm = showResetCardForm;
@@ -256,13 +237,10 @@ window.processResetCardForm = processResetCardForm;
 window.togglePaxtonResetVisibility = togglePaxtonResetVisibility;
 window.processPaxtonResetForm = processPaxtonResetForm;
 
-// Initialize when the page loads
 document.addEventListener("DOMContentLoaded", function () {
-  // Ensure we have a WebSocket connection
   ensureWebSocket();
   updateResetCardTable();
 
-  // Ensure forms are hidden initially
   const form = document.querySelector(".resetCardForm");
   if (form) {
     form.style.display = "none";

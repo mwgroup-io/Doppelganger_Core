@@ -8,7 +8,6 @@ let isInitializing = false;
 // Message handlers
 const handlers = {};
 
-// Function to register a message handler
 function registerHandler(type, handler) {
   if (!handlers[type]) {
     handlers[type] = [];
@@ -16,7 +15,6 @@ function registerHandler(type, handler) {
   handlers[type].push(handler);
 }
 
-// Function to ensure WebSocket connection exists
 function ensureWebSocket() {
   if (isInitializing) {
     return ws;
@@ -59,7 +57,6 @@ function ensureWebSocket() {
   return ws;
 }
 
-// Function to send data through WebSocket
 function sendData(data) {
   const ws = ensureWebSocket();
   if (ws.readyState === WebSocket.OPEN) {
@@ -69,10 +66,8 @@ function sendData(data) {
   }
 }
 
-// Make functions globally available
 window.sendData = sendData;
 window.ensureWebSocket = ensureWebSocket;
 window.registerHandler = registerHandler;
 
-// Initialize WebSocket when the page loads
 document.addEventListener("DOMContentLoaded", ensureWebSocket);

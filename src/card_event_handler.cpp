@@ -12,12 +12,10 @@ CardEventHandler &CardEventHandler::getInstance()
 
 void CardEventHandler::begin()
 {
-    // Any initialization if needed
 }
 
 void CardEventHandler::handleCardEvent(CardProcessor &cardProcessor)
 {
-    // Log card data to CSV based on current reader type
     ReaderType currentMode = readerManager.getCurrentType();
 
     if (currentMode == READER_HID)
@@ -44,7 +42,6 @@ void CardEventHandler::processHIDCardData(CardProcessor &cardProcessor)
 {
     logger.writeCardLog();
 
-    // Send notification (which handles email if configured)
     String cardData = String(cardProcessor.getBitCount()) + "," +
                       String(cardProcessor.getFacilityCode()) + "," +
                       String(cardProcessor.getCardNumber()) + "," +
@@ -57,7 +54,6 @@ void CardEventHandler::processNet2CardData(CardProcessor &cardProcessor)
 {
     logger.writeCardLog();
 
-    // Send notification (which handles email if configured)
     String cardData = String(cardProcessor.getBitCount()) + "," +
                       String(cardProcessor.getFacilityCode()) + "," +
                       String(cardProcessor.getCardNumber()) + "," +
@@ -70,7 +66,6 @@ void CardEventHandler::processPinData(CardProcessor &cardProcessor)
 {
     logger.writePinLog();
 
-    // Send notification (which handles email if configured)
     String pinCode = formatPinCode(cardProcessor);
     String pinData = pinCode + "," + String(cardProcessor.getDataStreamBIN());
     notificationManager.handlePinRead(pinData.c_str());
@@ -80,7 +75,6 @@ void CardEventHandler::processKeypadData(CardProcessor &cardProcessor)
 {
     logger.writeKeypadLog();
 
-    // Send notification (which handles email if configured)
     int keyNum = cardProcessor.getKeypadNumber();
     String keyChar = keypadProcessor.getKeyChar(keyNum);
     String keypadData = keyChar + "," + String(cardProcessor.getDataStreamBIN());
@@ -108,5 +102,4 @@ String CardEventHandler::formatPinCode(CardProcessor &cardProcessor)
     }
 }
 
-// Global instance
 CardEventHandler &cardEventHandler = CardEventHandler::getInstance();

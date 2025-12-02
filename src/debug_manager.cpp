@@ -6,7 +6,7 @@ const char *DebugManager::DEBUG_CONFIG_FILE = "/www/debug_config.json";
 
 DebugManager::DebugManager() : debugEnabled(true)
 {
-    DEBUG_ENABLED = true; // Initialize global state
+    DEBUG_ENABLED = true;
 }
 
 void DebugManager::begin()
@@ -50,7 +50,6 @@ void DebugManager::setDefaultDebug()
 
     debugFile.close();
 
-    // Set both local and global debug state
     debugEnabled = true;
     DEBUG_ENABLED = true;
 }
@@ -82,7 +81,7 @@ bool DebugManager::readDebugConfig()
     }
 
     debugEnabled = jsonDoc["DEBUG"].as<bool>();
-    DEBUG_ENABLED = debugEnabled; // Synchronize global state
+    DEBUG_ENABLED = debugEnabled;
     return true;
 }
 
@@ -110,7 +109,7 @@ bool DebugManager::updateDebugState(bool newState)
         return true; // No change needed
 
     debugEnabled = newState;
-    DEBUG_ENABLED = newState; // Update global state
+    DEBUG_ENABLED = newState;
 
     if (newState)
     {
@@ -156,4 +155,4 @@ bool DebugManager::writeDebugConfig(bool state)
     return true;
 }
 
-DebugManager debugManager; // Global instance definition
+DebugManager debugManager;

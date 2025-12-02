@@ -1,24 +1,20 @@
 #include "wiegand_interface.h"
 #include "card_processor.h"
 
-// Define global variables
 unsigned char databits[MAX_BITS];
 volatile unsigned int bitCount = 0;
 unsigned char flagDone;
 unsigned int weigand_counter;
 
-// Card data storage
 volatile unsigned long facilityCode = 0;
 volatile unsigned long cardNumber = 0;
 volatile unsigned long dataStream = 0;
 
-// HEX conversion buffers
 volatile unsigned long bitHolder1 = 0;
 volatile unsigned long bitHolder2 = 0;
 volatile unsigned long cardChunk1 = 0;
 volatile unsigned long cardChunk2 = 0;
 
-// PIV/MF card data buffers
 volatile unsigned long pivUID = 0;
 volatile unsigned long chunk1Hex = 0;
 volatile unsigned long chunk2Hex = 0;
@@ -28,7 +24,6 @@ String reversedPairsUID = "";
 String csvHEX = "";
 String dataStreamBIN = "";
 
-// Global instance
 WiegandInterface &wiegandInterface = WiegandInterface::getInstance();
 
 WiegandInterface::WiegandInterface() {}
@@ -73,7 +68,6 @@ void WiegandInterface::reset()
     dataStreamBIN = "";
 }
 
-// Global interrupt handlers
 void IRAM_ATTR handleData0()
 {
     cardProcessor.ISR_INT0();

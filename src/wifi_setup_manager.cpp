@@ -138,7 +138,6 @@ bool WiFiSetupManager::setupTime()
   configTime(3, 0, "pool.ntp.org", "time.nist.gov");
   unsigned long ms = millis();
 
-  // Wait for NTP sync
   time_t now = time(nullptr);
   while (now < ESP_TIME_DEFAULT_TS && millis() - ms < 10000)
   {

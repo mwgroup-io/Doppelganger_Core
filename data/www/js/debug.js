@@ -3,11 +3,9 @@
 
 var connection = new WebSocket("ws://" + location.hostname + ":81/");
 
-// Ensure debug button always has correct styling
 document.addEventListener("DOMContentLoaded", function () {
   const debugButton = document.getElementById("debug-submit-button");
   if (debugButton) {
-    // Ensure button has the correct classes
     debugButton.classList.add("update-button", "centered");
   }
 });
@@ -19,18 +17,17 @@ function processDebugForm() {
     return;
   }
 
-  // Get the selected option's text content instead of value
   const selectedOption = debugSelect.options[debugSelect.selectedIndex];
   const debugEnabled = selectedOption.text === "Enable";
   console.log("Selected option:", selectedOption.text);
-  console.log("Setting debug mode to:", debugEnabled); // Debug log
+  console.log("Setting debug mode to:", debugEnabled);
 
   const formData = {
     DEBUG: debugEnabled,
   };
 
   const debugConfig = JSON.stringify(formData);
-  console.log("Sending debug config:", debugConfig); // Debug log
+  console.log("Sending debug config:", debugConfig);
   connection.send(debugConfig);
 
   if (debugEnabled) {
@@ -59,7 +56,6 @@ function processDebugForm() {
   }, 2000);
 }
 
-// Add WebSocket message handler to confirm state changes
 connection.onmessage = function (event) {
   console.log("WebSocket message received:", event.data);
 };
@@ -72,12 +68,10 @@ connection.onopen = function () {
   console.log("WebSocket connection established");
 };
 
-// Function to update the current debug mode display
 function updateDebugMode() {
   fetch("debug_config.json")
     .then((response) => response.json())
     .then((data) => {
-      // Convert boolean to string status with capitalized first letter
       const status = data.DEBUG ? "Enabled" : "Disabled";
       updateDebugStatus(status);
     })
@@ -88,14 +82,12 @@ function updateDebugMode() {
     });
 }
 
-// Initialize debug mode display when page loads
 document.addEventListener("DOMContentLoaded", updateDebugMode);
 
 function updateDebugSelect(currentMode) {
   const debugSelect = document.getElementById("debug-select");
-  debugSelect.innerHTML = ""; // Clear existing options
+  debugSelect.innerHTML = "";
 
-  // Add only the opposite option of current state
   const option = document.createElement("option");
   if (currentMode === "Enabled") {
     option.value = "Disabled";
@@ -107,10 +99,8 @@ function updateDebugSelect(currentMode) {
   debugSelect.appendChild(option);
 }
 
-// Call this when loading current debug state
 function updateDebugStatus(status) {
   const debugStatus = document.getElementById("current-debug-mode");
-  // Capitalize first letter for display
   debugStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
   updateDebugSelect(debugStatus.textContent);
 }

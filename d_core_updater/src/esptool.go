@@ -89,7 +89,6 @@ func installHomebrewAndEsptool() {
 	}
 }
 
-// getEsptoolArgs returns correct syntax for esptool version
 func getEsptoolArgs(esptoolCmd string, useHyphens bool) (beforeReset, afterReset, writeFlash, eraseFlash, flashMode, flashFreq, flashSize string) {
 	if isPythonEsptool(esptoolCmd) {
 		return "default_reset", "hard_reset", "write_flash", "erase_flash", "flash_mode", "flash_freq", "flash_size"
@@ -98,7 +97,6 @@ func getEsptoolArgs(esptoolCmd string, useHyphens bool) (beforeReset, afterReset
 	}
 }
 
-// getEsptoolCommand returns the correct esptool command for the OS
 func getEsptoolCommand() string {
 	switch runtime.GOOS {
 	case "linux":
@@ -124,7 +122,6 @@ func getEsptoolCommand() string {
 		} else if _, err := exec.LookPath("esptool.py"); err == nil {
 			return "esptool.py"
 		} else {
-			// Check Homebrew paths directly
 			homebrewPaths := []string{
 				"/opt/homebrew/bin/esptool", // Apple Silicon
 				"/usr/local/bin/esptool",    // Intel
@@ -147,7 +144,6 @@ func getEsptoolCommand() string {
 			pythonPaths := getAllPythonPaths()
 			for _, pythonPath := range pythonPaths {
 				if _, err := os.Stat(pythonPath); err == nil {
-					// Check Scripts directory for esptool.exe
 					scriptsDir := filepath.Dir(pythonPath) + "\\Scripts"
 					esptoolPath := filepath.Join(scriptsDir, "esptool.exe")
 					if _, err := os.Stat(esptoolPath); err == nil {
@@ -156,7 +152,7 @@ func getEsptoolCommand() string {
 				}
 			}
 
-			return "esptool.exe" // fallback, will fail gracefully
+			return "esptool.exe"
 		}
 	default:
 		return "esptool"
@@ -164,7 +160,6 @@ func getEsptoolCommand() string {
 }
 
 func installEsptool() {
-	// First check if esptool is already installed and working
 	esptoolCmd := getEsptoolCommand()
 	if esptoolCmd != "" && esptoolCmd != "esptool" {
 		// Try to run esptool version to see if it works
@@ -172,7 +167,6 @@ func installEsptool() {
 		cmd.Stdout = nil
 		cmd.Stderr = nil
 		if err := cmd.Run(); err != nil {
-			// esptool found but not working, try to repair
 			if repairEsptoolInstallation() {
 				return
 			}
@@ -194,7 +188,6 @@ func installEsptool() {
 	}
 }
 
-// repairEsptoolInstallation attempts to fix a broken esptool installation
 func repairEsptoolInstallation() bool {
 	if runtime.GOOS == "linux" {
 		return repairEsptoolInstallationLinux()
@@ -274,14 +267,12 @@ func repairEsptoolInstallationLinux() bool {
 }
 
 func repairEsptoolInstallationWindows() bool {
-	// Get Python path for the current esptool installation
 	pythonPath := ""
 
 	// Try to find Python installation that has esptool
 	pythonPaths := getAllPythonPaths()
 	for _, path := range pythonPaths {
 		if isValidPythonInstallation(path) {
-			// Check if this Python installation has esptool
 			scriptsDir := filepath.Dir(path) + "\\Scripts"
 			esptoolPath := filepath.Join(scriptsDir, "esptool.exe")
 			if _, err := os.Stat(esptoolPath); err == nil {
@@ -359,7 +350,7 @@ func installEsptoolLinux() {
 		cmdPython = exec.Command("sudo", "apt", "install", "-y", "python3", "python3-pip", "python3-venv")
 		cmdPython.Stdout = os.Stdout
 		cmdPython.Stderr = os.Stderr
-		cmdPython.Run() // Ignore errors
+		cmdPython.Run()
 
 		// Setup user groups
 		fmt.Println("\033[1;36mStep 3: Setting up user permissions...\033[0m")
@@ -439,7 +430,7 @@ func setupLinuxUserGroups() {
 
 	groups := string(output)
 	if strings.Contains(groups, "dialout") {
-		return // User is already in dialout group, nothing to do
+		return
 	}
 
 	// Add user to dialout group automatically
@@ -479,7 +470,6 @@ func installEsptoolDarwin() {
 		return
 	}
 
-	// Check Homebrew paths directly
 	homebrewPaths := []string{
 		"/opt/homebrew/bin/esptool", // Apple Silicon
 		"/usr/local/bin/esptool",    // Intel

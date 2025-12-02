@@ -5,7 +5,6 @@
 #include "gpio_manager.h"
 #include "keypad_processor.h"
 
-// Global instance definition - must be before any other code
 CardProcessor cardProcessor;
 
 CardProcessor::CardProcessor()
@@ -15,7 +14,6 @@ CardProcessor::CardProcessor()
 
 void CardProcessor::reset()
 {
-    // Save current GPIO settings
     bool savedPin35 = pin35OnCardRead;
     bool savedPin36 = pin36OnCardRead;
 
@@ -47,7 +45,6 @@ void CardProcessor::reset()
         databits[i] = 0;
     }
 
-    // Restore GPIO settings
     pin35OnCardRead = savedPin35;
     pin36OnCardRead = savedPin36;
 }
@@ -87,7 +84,6 @@ void CardProcessor::handleGPIOOnCardRead()
 
 void CardProcessor::processNet2Frame()
 {
-    // Snapshot bits under interrupt lock for reliability
     noInterrupts();
 
     unsigned int bc = net2BitCount;
@@ -98,7 +94,6 @@ void CardProcessor::processNet2Frame()
     for (unsigned int i = 0; i < bc; i++)
         bitsCopy[i] = net2Bits[i];
 
-    // Immediately clear and reset for next frame (critical for rapid PIN entry)
     net2FrameActive = false;
     net2BitCount = 0;
     net2FrameReady = false;
@@ -106,7 +101,6 @@ void CardProcessor::processNet2Frame()
 
     interrupts();
 
-    // Check if this is a keypad frame (55-56 bits)
     if (bc >= 55 && bc <= 56)
     {
         int keyNum = -1;
@@ -118,10 +112,8 @@ void CardProcessor::processNet2Frame()
             bitCount = bc;
             keypadNumber = keyNum;
 
-            // Store hex pattern for logging
             csvHEX = keypadProcessor.getLastHexPattern();
 
-            // Create binary representation for logging
             char binBuf[128];
             for (unsigned int i = 0; i < bc && i < 127; i++)
             {
@@ -136,7 +128,6 @@ void CardProcessor::processNet2Frame()
         }
     }
 
-    // Check if this is a card frame (75 bits)
     unsigned long cardID = 0;
     unsigned long long fullID = 0;
 
@@ -249,14 +240,12 @@ void CardProcessor::processCard()
 {
     if (readerManager.isPaxtonMode())
     {
-        // Quick check - process immediately if frame is ready
         if (net2FrameReady && net2BitCount >= NET2_MIN_BITS)
         {
             processNet2Frame();
             return;
         }
 
-        // Check for timeout on incomplete frames
         if (net2BitCount >= NET2_MIN_BITS && net2BitCount > 0)
         {
             unsigned long now = micros();
@@ -283,7 +272,6 @@ void CardProcessor::processCard()
             getCardValues();
             getFacilityCodeCardNumber();
 
-            // Generate HEX string based on card type
             if ((bitCount == 28 || bitCount == 30 || bitCount == 31 || bitCount == 33 ||
                  bitCount == 36 || bitCount == 48) &&
                 bitCount != 26 && bitCount != 27 && bitCount != 29 && bitCount != 34 &&
