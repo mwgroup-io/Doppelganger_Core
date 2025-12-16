@@ -5,15 +5,15 @@ async function loadNetworkInfo() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    
+
     const configIP = document.getElementById("networkIP");
     const configHostname = document.getElementById("networkHostname");
-    
+
     if (data.ip && data.ip !== "Not Connected") {
       if (configIP) {
         configIP.textContent = data.ip;
       }
-      
+
       if (configHostname) {
         configHostname.textContent = data.mdns || data.hostname || "N/A";
       }
