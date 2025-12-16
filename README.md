@@ -203,7 +203,9 @@ For detialed guidance on device usage, reference the [Product Documentation](htt
 
 1. Power on your Doppelgänger Pro device
 2. Connect to the **doppelgänger_XXXX** network (default password: **UndertheRadar**)
-3. Access the web interface at http://192.168.4.1 or http://rfid.local
+3. Access the web interface:
+   - **iPhone/iOS**: Access at http://192.168.4.1 or http://rfid.local
+   - **Android**: Install the "mDNS Discovery" application from the Play Store. Once connected to the device network, open mDNS Discovery and search for "http". You will see an entry titled "rfid". Long press the entry to launch the Doppelgänger webpage in your default browser. Alternatively, you can find the device IP address in the Configuration page under "Network Information" after connecting via WiFi.
 4. Configure WiFi and notification settings
 5. Begin capturing card data
 
