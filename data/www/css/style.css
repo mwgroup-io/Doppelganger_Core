@@ -380,7 +380,7 @@ code {
   line-height: 1.6;
 }
 
-@media all and (max-width: 500px) {
+@media all and (max-width: 768px) {
   .wrapper {
     max-width: 97%;
     width: 97%;
@@ -396,15 +396,24 @@ code {
   }
   
   .navigation {
-    justify-content: space-around;
+    flex-flow: column wrap;
+    padding: 0;
+    justify-content: flex-start;
   }
   
   .navigation a {
+    text-align: center;
     padding: 0.5em 1em;
+    border-top: 1px solid var(--nav-border-top);
+    border-bottom: 1px solid var(--nav-border-bottom);
     min-height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  
+  .navigation li:last-of-type a {
+    border-bottom: none;
   }
 
   .input-group {
@@ -493,20 +502,6 @@ code {
     max-width: 96%;
     width: 96%;
     margin: 1em auto;
-  }
-  .navigation {
-    flex-flow: column wrap;
-    padding: 0;
-  }
-  .navigation a {
-    text-align: center;
-    padding: 0.5em 1em;
-    border-top: 1px solid var(--nav-border-top);
-    border-bottom: 1px solid var(--nav-border-bottom);
-    min-height: 32px;
-  }
-  .navigation li:last-of-type a {
-    border-bottom: none;
   }
 }
 
@@ -1367,7 +1362,7 @@ select#debug-select:focus {
 }
 
 /* Mobile styles */
-@media all and (max-width: 500px) {
+@media all and (max-width: 768px) {
   .notificationsForm .input-group,
   .resetCardForm .input-group,
   .gpioForm .input-group {
@@ -1661,7 +1656,7 @@ hr {
 }
 
 /* Mobile adjustments */
-@media all and (max-width: 500px) {
+@media all and (max-width: 768px) {
     .gpioForm .input-group input,
     .gpioForm .input-group select {
         height: 38px;  /* Keep consistent height on mobile */

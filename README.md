@@ -17,6 +17,7 @@ Doppelgänger Core is a professional-grade RFID card cloning and analysis tool d
 - Added network information API endpoint
 - Enhanced IP address visibility in configuration page
 - Improved WiFi hostname configuration for better Android support
+- Fixed mobile navigation menu to stack vertically on all mobile devices (including large Android phones)
 - Use the mDNS Discovery app and search "http" then long press to access the web application.
 
 ### Version 1.2.1 (02DEC2025)
