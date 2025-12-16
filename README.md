@@ -8,20 +8,16 @@ Doppelgänger Core is a professional-grade RFID card cloning and analysis tool d
 
 ## Current Version
 
-- Version: 1.2.1
-- Build Date: 02DEC2025
+- Version: 1.2.2
+- Build Date: 16DEC2025
 
-### Highlights
-- Added Paxton/Net2 reader support with 75-bit protocol decoding
-- Paxton KP75 keypad support with 55-56 bit keypad frame decoding
-- HID/Paxton mode switching without device restart
-- Paxton reset card support for WiFi credential clearing
-- Enhanced CSV logging with card format identification
-- Web UI for reader mode configuration
-- Added AWID 50-bit card format support
-  - Facility Code: 16 bits (bits 1–16)
-  - Card Number: 32 bits (bits 17–48)
-- Improved card data reporting and analysis
+
+### Version 1.2.2 (16DEC2025)
+- Android mDNS compatibility improvements
+- Added network information API endpoint
+- Enhanced IP address visibility in configuration page
+- Improved WiFi hostname configuration for better Android support
+- Use the mDNS Discovery app and search "http" then long press to access the web application.
 
 ### Version 1.2.1 (02DEC2025)
 - Fixed Paxton keypad press detection and decoding

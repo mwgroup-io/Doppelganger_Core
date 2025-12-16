@@ -25,7 +25,10 @@ WiFiSetupManager &wifiSetupManager = WiFiSetupManager::getInstance();
 void WiFiSetupManager::begin(const char *deviceName, const char *defaultPass, const char *prefixSSID)
 {
   setupWiFiManager(deviceName, defaultPass, prefixSSID);
-  setupMDNS("RFID");
+  if (connected)
+  {
+    setupMDNS("rfid");
+  }
 }
 
 void WiFiSetupManager::setupWiFiManager(const char *deviceName, const char *defaultPass, const char *prefixSSID)
@@ -41,6 +44,9 @@ void WiFiSetupManager::setupWiFiManager(const char *deviceName, const char *defa
   strncpy(ssid, defaultSSID.c_str(), sizeof(ssid) - 1);
   ssid[sizeof(ssid) - 1] = '\0'; // Ensure null termination
 
+  // Set WiFi hostname BEFORE connecting (critical for Android mDNS compatibility)
+  WiFi.setHostname("rfid");
+  
   // Configure WiFiManager
   wifiManager.setHostname("rfid");
   wifiManager.setConfigPortalTimeout(180); // 3 minutes
@@ -67,6 +73,8 @@ void WiFiSetupManager::setupWiFiManager(const char *deviceName, const char *defa
   connected = wifiManager.autoConnect(ssid, defaultPass);
   if (connected)
   {
+    // Ensure hostname is set after connection (Android compatibility)
+    WiFi.setHostname("rfid");
     localIP = WiFi.localIP();
     gatewayIP = WiFi.gatewayIP();
     strncpy(macAddress, WiFi.macAddress().c_str(), sizeof(macAddress) - 1);
@@ -76,6 +84,10 @@ void WiFiSetupManager::setupWiFiManager(const char *deviceName, const char *defa
 
 void WiFiSetupManager::setupMDNS(const char *host)
 {
+  // Ensure hostname matches mDNS name exactly (Android is case-sensitive)
+  WiFi.setHostname(host);
+  delay(100);
+  
   if (!MDNS.begin(host))
   {
     Serial.println("[MDNS] Error setting up MDNS responder!");
@@ -83,6 +95,10 @@ void WiFiSetupManager::setupMDNS(const char *host)
   else
   {
     MDNS.addService("http", "tcp", 80);
+    Serial.println("[MDNS] MDNS responder started");
+    Serial.print("[MDNS] Device will be reachable at http://");
+    Serial.print(host);
+    Serial.println(".local/");
   }
 }
 

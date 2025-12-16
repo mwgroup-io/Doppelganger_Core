@@ -19,14 +19,14 @@ function loadReaderConfig() {
 
 function processReaderForm() {
   const readerType = document.getElementById("reader-select").value;
-  
+
   if (readerType !== "HID" && readerType !== "PAXTON") {
     alert("Invalid reader type selected");
     return;
   }
 
   const formData = {
-    READER_TYPE: readerType
+    READER_TYPE: readerType,
   };
 
   const readerConfig = JSON.stringify(formData);
@@ -41,4 +41,3 @@ function processReaderForm() {
 }
 
 document.addEventListener("DOMContentLoaded", loadReaderConfig);
-

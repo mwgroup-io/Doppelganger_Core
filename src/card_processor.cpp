@@ -241,10 +241,10 @@ void CardProcessor::processCard()
     if (readerManager.isPaxtonMode())
     {
         if (net2FrameReady && net2BitCount >= NET2_MIN_BITS)
-        {
-            processNet2Frame();
+            {
+                processNet2Frame();
             return;
-        }
+            }
 
         if (net2BitCount >= NET2_MIN_BITS && net2BitCount > 0)
         {

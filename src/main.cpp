@@ -1,6 +1,6 @@
 /*
  * Doppelgänger Core
- * Version 1.2.1 (02DEC2025)
+ * Version 1.2.2 (16DEC2025)
  * Copyright: Mayweather Group LLC
  * Written by Travis Weathers (@tweathers-sec)
  *
@@ -50,8 +50,7 @@ bool shouldSaveConfig = false;
 
 WiFiManager wifiManager;
 
-// mDNS Configuration
-#define mdnsHost "RFID"
+// mDNS Configuration (removed - handled in WiFiSetupManager)
 
 // Web servers
 AsyncWebServer server(80);
@@ -107,6 +106,11 @@ void setup()
     {
       Serial.println("======================================================================");
       Serial.println("[WIFI] Successfully connected to WiFi");
+      Serial.print("[WIFI] Device IP Address: ");
+      Serial.println(wifiSetupManager.getLocalIP().toString());
+      Serial.print("[WIFI] Access URL: http://");
+      Serial.print(wifiSetupManager.getLocalIP().toString());
+      Serial.println("/");
 
       emailManager.readConfig();
 
@@ -120,17 +124,6 @@ void setup()
 
       if (WiFi.status() == WL_CONNECTED)
       {
-        if (!MDNS.begin(mdnsHost))
-        {
-          Serial.println("======================================================================");
-          Serial.println("[MDNS] Error setting up MDNS responder!");
-        }
-        else
-        {
-          Serial.println("======================================================================");
-          Serial.println("[MDNS] MDNS responder started");
-          MDNS.addService("http", "tcp", 80);
-        }
         notificationManager.begin();
       }
     }
@@ -156,6 +149,33 @@ void setup()
     doc["version"] = version;
     doc["buildDate"] = builddate;
     doc["device"] = device;
+    serializeJson(doc, *response);
+    request->send(response); });
+
+  server.on("/network", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
+    AsyncResponseStream *response = request->beginResponseStream("application/json");
+    JsonDocument doc;
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      String ipStr = WiFi.localIP().toString();
+      String hostnameStr = WiFi.getHostname();
+      doc["ip"] = ipStr;
+      doc["hostname"] = hostnameStr;
+      doc["ssid"] = WiFi.SSID();
+      doc["rssi"] = WiFi.RSSI();
+      doc["mdns"] = hostnameStr + ".local";
+      doc["url"] = "http://" + ipStr;
+    }
+    else
+    {
+      doc["ip"] = "Not Connected";
+      doc["hostname"] = "";
+      doc["ssid"] = "";
+      doc["rssi"] = 0;
+      doc["mdns"] = "";
+      doc["url"] = "";
+    }
     serializeJson(doc, *response);
     request->send(response); });
 
@@ -237,8 +257,16 @@ void setup()
   websockets.begin();
   websockets.onEvent(webSocketEvent);
   logger.logWebServerStatus("WebSocket service is running");
-  logger.logWebServerURL("Doppelgänger", "RFID.local");
-  logger.logWebServerURL("Doppelgänger", wifiSetupManager.getLocalIP().toString().c_str());
+  if (wifiSetupManager.isConnected())
+  {
+    logger.logWebServerURL("Doppelgänger", "rfid.local");
+    logger.logWebServerURL("Doppelgänger", wifiSetupManager.getLocalIP().toString().c_str());
+    Serial.println("======================================================================");
+    Serial.println("[ANDROID] For Android devices, use IP address directly:");
+    Serial.print("[ANDROID] http://");
+    Serial.print(wifiSetupManager.getLocalIP().toString());
+    Serial.println("/");
+  }
 
   logger.logResetCardInfo(LOGGER_RESET_CARD_FILE);
 

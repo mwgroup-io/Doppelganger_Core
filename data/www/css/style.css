@@ -289,6 +289,26 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 8px rgba(0, 163, 185, 0.25);
 }
 
+/* Copy URL Button */
+.copy-url-button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0.4em 0.8em;
+  margin: 0.25em 0.5em;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.copy-url-button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 163, 185, 0.25);
+}
+
 /* Config */
 .button-container {
   align-items: stretch;

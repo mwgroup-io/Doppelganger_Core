@@ -98,19 +98,19 @@ function parseCSV(csvData, paxton) {
           keypadCNs = [];
         }
 
-        const TYPE =
-          parts[2] && parts[2].includes(":")
-            ? parts[2].split(":")[1].trim()
-            : "75";
-        const HEX =
+      const TYPE =
+        parts[2] && parts[2].includes(":")
+          ? parts[2].split(":")[1].trim()
+          : "75";
+      const HEX =
           parts[3] && parts[3].includes(":")
             ? parts[3].split(":")[1].trim()
             : "";
-        const TOKEN =
+      const TOKEN =
           parts[5] && parts[5].includes(":")
             ? parts[5].split(":")[1].trim()
             : "";
-        data.push({ TYPE, TOKEN, HEX });
+      data.push({ TYPE, TOKEN, HEX });
         return;
       }
 
@@ -149,7 +149,7 @@ function parseCSV(csvData, paxton) {
     if (paxton) {
       data.push({ TYPE: "PIN", TOKEN: keypadCNs.join(""), HEX: "N/A" });
     } else {
-      data.push({ BL: "PIN", FC: "N/A", CN: keypadCNs.join("") });
+    data.push({ BL: "PIN", FC: "N/A", CN: keypadCNs.join("") });
     }
   }
 
