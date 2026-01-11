@@ -1,8 +1,8 @@
 #include "version_config.h"
 
 // Version info
-const char *version = "1.2.2";
-const char *builddate = "16DEC2025";
+const char *version = "1.2.3";
+const char *builddate = "10JAN2026";
 const char *device = "Core";
 const char *hardware = "1.0a";
 

@@ -46,7 +46,7 @@ void WiFiSetupManager::setupWiFiManager(const char *deviceName, const char *defa
 
   // Set WiFi hostname BEFORE connecting (critical for Android mDNS compatibility)
   WiFi.setHostname("rfid");
-  
+
   // Configure WiFiManager
   wifiManager.setHostname("rfid");
   wifiManager.setConfigPortalTimeout(180); // 3 minutes

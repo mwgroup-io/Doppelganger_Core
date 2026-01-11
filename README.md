@@ -8,9 +8,17 @@ Doppelgänger Core is a professional-grade RFID card cloning and analysis tool d
 
 ## Current Version
 
-- Version: 1.2.2
-- Build Date: 16DEC2025
+- Version: 1.2.3
+- Build Date: 10JAN2026
 
+### Version 1.2.3 (10JAN2026)
+- **ATLAS Integration**: Full compatibility with [Doppelgänger ATLAS](https://atlas.mwgroup.io/) Physical Security Operations Platform
+  - Real-time card streaming to ATLAS via WiFi
+  - GPS-tagged card reads for geospatial intelligence
+  - Seamless integration with ATLAS project management and reporting workflows
+  - Enhanced API endpoints for ATLAS connectivity
+- Improved network stability for long-range WiFi connections
+- Enhanced card data streaming performance for mobile applications
 
 ### Version 1.2.2 (16DEC2025)
 - Android mDNS compatibility improvements
@@ -199,9 +207,9 @@ RFID Reader                     Doppelgänger Board
 
 ## Getting Started
 
-For detialed guidance on device usage, reference the [Product Documentation](https://physicalexploit.com/docs/products/code/doppelganger_core/).
+For detailed guidance on device usage, reference the [Product Documentation](https://physicalexploit.com/docs/products/code/doppelganger_core/).
 
-1. Power on your Doppelgänger Pro device
+1. Power on your Doppelgänger Core device
 2. Connect to the **doppelgänger_XXXX** network (default password: **UndertheRadar**)
 3. Access the web interface:
    - **iPhone/iOS**: Access at http://192.168.4.1 or http://rfid.local
@@ -209,11 +217,29 @@ For detialed guidance on device usage, reference the [Product Documentation](htt
 4. Configure WiFi and notification settings
 5. Begin capturing card data
 
+### Using with Doppelgänger ATLAS
+
+Doppelgänger Core is fully integrated with [Doppelgänger ATLAS](https://atlas.mwgroup.io/), the Physical Security Operations Platform for Android. To use Doppelgänger Core with ATLAS:
+
+1. Ensure your Doppelgänger Core is connected to WiFi (configure via the web interface)
+2. Open ATLAS on your Android device
+3. In ATLAS, navigate to device connections and select "Doppelgänger Core"
+4. ATLAS will automatically discover and connect to your Doppelgänger Core device
+5. Card reads will stream in real-time to ATLAS with GPS tagging, project management, and TAK integration
+
+ATLAS provides advanced features including:
+- GPS intelligence with auto-tagged card reads
+- Project management for organizing engagements
+- TAK integration for real-time team situational awareness
+- Export to KML/GeoJSON for mapping and reporting
+- Integration with Proxmark3 and other Doppelgänger ecosystem devices
+
 [WiFi Setup](https://physicalexploit.com/product-docs/d_core_wifi_manager.png)
 
 
 ## Features
 
+* **ATLAS Integration**: Seamless connection to [Doppelgänger ATLAS](https://atlas.mwgroup.io/) for professional physical security operations. Stream card reads in real-time, tag with GPS coordinates, and integrate with TAK for team situational awareness.
 * **Real-time Notifications**: Email alerts, webhook support, web notifications
 * **Professional Interface**: Modern web UI, real-time display, advanced exports
 * **Detailed Logging**: Comprehensive debug information and card data analysis

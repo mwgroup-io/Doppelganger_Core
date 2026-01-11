@@ -1,6 +1,6 @@
 /*
  * Doppelgänger Core
- * Version 1.2.2 (16DEC2025)
+ * Version 1.2.3 (23DEC2025)
  * Copyright: Mayweather Group LLC
  * Written by Travis Weathers (@tweathers-sec)
  *
@@ -176,6 +176,30 @@ void setup()
       doc["mdns"] = "";
       doc["url"] = "";
     }
+    serializeJson(doc, *response);
+    request->send(response); });
+
+  server.on("/device-info", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
+    AsyncResponseStream *response = request->beginResponseStream("application/json");
+    JsonDocument doc;
+    
+    doc["version"] = version;
+    doc["buildDate"] = builddate;
+    doc["device"] = device;
+    doc["hardware"] = hardware;
+    
+    WiFiSetupManager &wifiMgr = WiFiSetupManager::getInstance();
+    doc["mac"] = wifiMgr.getMacAddress();
+    
+    doc["chipModel"] = ESP.getChipModel();
+    doc["chipRevision"] = ESP.getChipRevision();
+    doc["chipCores"] = ESP.getChipCores();
+    doc["cpuFreqMHz"] = ESP.getCpuFreqMHz();
+    doc["flashSize"] = ESP.getFlashChipSize();
+    doc["freeHeap"] = ESP.getFreeHeap();
+    doc["heapSize"] = ESP.getHeapSize();
+    
     serializeJson(doc, *response);
     request->send(response); });
 
