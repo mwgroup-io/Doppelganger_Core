@@ -127,7 +127,7 @@ void Logger::logCardDataPIV()
     Serial.print("[CARD READ] Format: ");
     Serial.print(cardProcessor.getCardFormat());
     Serial.print(", Bits: ");
-    if (cardProcessor.getFacilityCode() >= 256)
+    if (cardProcessor.getFacilityCode() >= 512)
     {
         Serial.print("PIV/MF");
         Serial.print(", FC = UID");
@@ -284,7 +284,7 @@ void Logger::writeCardLog()
         csvCards.print(", Format: ");
         csvCards.print(cardProcessor.getCardFormat());
         csvCards.print(", Bit_Length: ");
-        if (cardProcessor.getFacilityCode() >= 256)
+        if (cardProcessor.getFacilityCode() >= 512)
         {
             csvCards.print("PIV/MF");
             csvCards.print(", Hex_Value: ");

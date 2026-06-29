@@ -85,21 +85,21 @@ The table below summarizes various card data formats that Doppelganger supports.
 | -------------------- | ------ | ------------------ | ------------------- | ------------------------------------- |
 | HID H10301           | 26-bit | 8 (1–8)            | 16 (9–24)           | Standard Prox                         |
 | Indala               | 26-bit | 8 (1–8)            | 16 (9–25)           | Requires Indala reader                |
-| Indala               | 27-bit | 12 (1–12)          | 13 (14–26)          | Requires Indala reader                |
-| 2804 WIEGAND         | 28-bit | 8 (4–11)           | 14 (13–26)          | Custom format                         |
-| Indala               | 29-bit | 12 (1–12)          | 15 (14–28)          | Requires Indala reader                |
-| ATS Wiegand          | 30-bit | 11 (2–12)          | 15 (14–28)          | Custom format                         |
+| Indala               | 27-bit | 13 (0–12)          | 14 (13–26)          | Requires Indala reader                |
+| 2804 WIEGAND         | 28-bit | 8 (4–11)           | 15 (12–26)          | Custom format                         |
+| Indala               | 29-bit | 13 (0–12)          | 16 (13–28)          | Requires Indala reader                |
+| ATS Wiegand          | 30-bit | 12 (1–12)          | 16 (13–28)          | Custom format                         |
 | HID ADT              | 31-bit | 4 (1–4)            | 23 (5–27)           | ADT specific format                   |
 | WEI32 (EM4102)       | 32-bit | 15 (1–15)          | 16 (16–31)          | EM4102 format                         |
 | HID D10202           | 33-bit | 7 (1–7)            | 24 (8–31)           | Extended format                       |
 | HID H10306           | 34-bit | 16 (1–16)          | 16 (17–32)          | Extended format                       |
 | HID Corporate 1000   | 35-bit | 12 (2–13)          | 20 (14–33)          | Corporate format                      |
-| HID Simplex (S12906) | 36-bit | 8 (1–8)            | 16 (19–34)          | Simplex format                        |
+| HID Simplex (S12906) | 36-bit | 8 (1–8)            | 24 (11–34)          | Simplex format                        |
 | HID H10304           | 37-bit | 16 (1–16)          | 19 (17–35)          | Extended format                       |
 | HID H800002          | 46-bit | 14 (1–14)          | 30 (15–44)          | HID H800002 format                    |
 | HID Corporate 1000   | 48-bit | 22 (2–23)          | 23 (24–46)          | Extended Corp format                  |
 | AWID 50              | 50-bit | 16 (1–16)          | 32 (17–48)          | AWID extended format                  |
-| Avigilon Avig56      | 56-bit | Configurable (N)   | Configurable (54−N) | 28/28 parity; site-configurable FC/CN |
+| Avigilon Avig56      | 56-bit | 20 (1–20)          | 32 (23–54)          | Step-parity at bits 0 & 55            |
 
 ### Paxton/Net2 Support
 | Card Type   | Format | Notes                           |

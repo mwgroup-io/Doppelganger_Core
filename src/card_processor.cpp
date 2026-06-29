@@ -288,7 +288,7 @@ void CardProcessor::processCard()
             }
             else if (bitCount == 32)
             {
-                if (facilityCode >= 256)
+                if (facilityCode >= 512)
                 {
                     pivParse();
                 }
@@ -366,7 +366,7 @@ String CardProcessor::getCardFormat() const
     case 31:
         return "ADT31";
     case 32:
-        if (facilityCode >= 256)
+        if (facilityCode >= 512)
         {
             return "PIV/MiFare/FASC-N";
         }
@@ -965,13 +965,13 @@ void CardProcessor::getFacilityCodeCardNumber()
 
     // Indala 27-bit
     case 27:
-        for (i = 1; i < 13; i++)
+        for (i = 0; i < 13; i++)
         {
             facilityCode <<= 1;
             facilityCode |= databits[i];
         }
 
-        for (i = 14; i < 27; i++)
+        for (i = 13; i < 27; i++)
         {
             cardNumber <<= 1;
             cardNumber |= databits[i];
@@ -986,7 +986,7 @@ void CardProcessor::getFacilityCodeCardNumber()
             facilityCode |= databits[i];
         }
 
-        for (i = 13; i < 27; i++)
+        for (i = 12; i < 27; i++)
         {
             cardNumber <<= 1;
             cardNumber |= databits[i];
@@ -995,13 +995,13 @@ void CardProcessor::getFacilityCodeCardNumber()
 
     // Indala 29-bit
     case 29:
-        for (i = 1; i < 13; i++)
+        for (i = 0; i < 13; i++)
         {
             facilityCode <<= 1;
             facilityCode |= databits[i];
         }
 
-        for (i = 14; i < 29; i++)
+        for (i = 13; i < 29; i++)
         {
             cardNumber <<= 1;
             cardNumber |= databits[i];
@@ -1010,13 +1010,13 @@ void CardProcessor::getFacilityCodeCardNumber()
 
     // ATS Wiegand 30-bit
     case 30:
-        for (i = 2; i < 13; i++)
+        for (i = 1; i < 13; i++)
         {
             facilityCode <<= 1;
             facilityCode |= databits[i];
         }
 
-        for (i = 14; i < 29; i++)
+        for (i = 13; i < 29; i++)
         {
             cardNumber <<= 1;
             cardNumber |= databits[i];
@@ -1106,7 +1106,7 @@ void CardProcessor::getFacilityCodeCardNumber()
             facilityCode |= databits[i];
         }
 
-        for (i = 19; i < 35; i++)
+        for (i = 11; i < 35; i++)
         {
             cardNumber <<= 1;
             cardNumber |= databits[i];
@@ -1174,10 +1174,11 @@ void CardProcessor::getFacilityCodeCardNumber()
 
     // Avigilon 56-bit (Avig56)
     case 56:
-        // From debug windows: readBitsWindow(1,32) forms 0x0022B000 for FC=555, so shift by 12
+        // PM3 spec: FC=20 bits at frame bits 1..20, CN=34 bits at frame bits 21..54.
+        // cardNumber is 32-bit so the upper 2 CN bits (frame bits 21..22) would
+        // overflow. Read frame bits 23..54 (32 bits) for CN<=4294967295 accuracy.
         facilityCode = (unsigned long)(readBitsWindow(1, 32) >> 12);
-        // CN observed stable in bits 33..54 in logs
-        cardNumber = readBitsWindow(33, 54);
+        cardNumber = readBitsWindow(23, 54);
         break;
 
     // Net2 cards
