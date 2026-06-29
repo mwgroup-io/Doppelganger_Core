@@ -1,4 +1,4 @@
-# Doppelganger_Core - Code Map
+# . - Code Map
 
 _Auto-generated (deterministic) by .agent-kit/gen-codemap.sh. Re-run to refresh; edit prose only OUTSIDE the GENERATED block._
 
