@@ -12,7 +12,7 @@ _Auto-generated (deterministic) by .agent-kit/gen-codemap.sh. Re-run to refresh;
 ```
 d_core_updater/                9 files
 data/                         29 files
-docs/                          1 files
+docs/                          2 files
 images/                        1 files
 include/                      20 files
 lib/                           1 files
