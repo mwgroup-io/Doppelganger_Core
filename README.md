@@ -6,7 +6,67 @@
 
 Doppelgänger Core is a professional-grade RFID card cloning and analysis tool designed for authorized penetration testing. Built on the ESP32S3 platform, it offers advanced features for capturing and analyzing access control card data while maintaining operational security and ease of use.
 
-## Current Version
+## Firmware 2.0.0
+
+Doppelgänger Core firmware is closed source from version 2.0.0 forward. It is published as a signed release and installed with the browser flasher. It is not built from this repository.
+
+**[Open the browser flasher](https://atlas.mwgroup.io/flash/)** to install 2.0.0 on a Core over a USB-C cable, from Chrome or Edge on a computer. Nothing is installed on the computer, and the reader keeps its settings and every card it has captured. The [flashing guide](https://atlas.mwgroup.io/hardware/core-flashing/) walks through it, and covers updating from [Doppelgänger ATLAS](https://atlas.mwgroup.io/) as well.
+
+This repository stays public as the open source line, 1.2.3 and earlier, for anyone who wants to build their own firmware for the Doppelgänger RFID Development Board. Everything below the screenshots describes that source and is kept as it was.
+
+<p align="center">
+  <img src="images/firmware-2/overview.png" alt="The Dashboard of a Core on firmware 2.0.0 in a desktop browser, with the Cards page on a phone in front of it" width="900">
+</p>
+
+### What 2.0.0 looks like
+
+The reader serves its own pages to any browser, on a computer or a phone, with no app required.
+
+#### On a computer
+
+<table>
+  <tr>
+    <td width="50%"><img src="images/firmware-2/desktop-dashboard.png" alt="Dashboard with card totals, reads over time, reader status and device health"></td>
+    <td width="50%"><img src="images/firmware-2/desktop-decode.png" alt="Decode page for one read, with its bits and every format that fits its length"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Dashboard</b><br>Card totals, reads over time, wiring and device health</td>
+    <td align="center"><b>Decode</b><br>One read, its bits, and every format that fits its length</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="images/firmware-2/desktop-setup.png" alt="Setup page listing nearby networks by signal with a Join A Network form"></td>
+    <td width="50%"><img src="images/firmware-2/desktop-firmware.png" alt="Settings on Firmware Update, showing version 2.0.0 and an Open Web Flasher button"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Setup</b><br>Nearby networks by signal, and the form to join one</td>
+    <td align="center"><b>Firmware Update</b><br>The running version and a link to the browser flasher</td>
+  </tr>
+</table>
+
+#### On a phone
+
+<table>
+  <tr>
+    <td width="25%"><img src="images/firmware-2/phone-cards.png" alt="Cards page on a phone with facility code, card number, bits and the card reads table"></td>
+    <td width="25%"><img src="images/firmware-2/phone-analysis.png" alt="Analysis page on a phone drawing a read as bits with modulation and frame readings"></td>
+    <td width="25%"><img src="images/firmware-2/phone-decode.png" alt="Decode page on a phone with card data, bits and matching formats"></td>
+    <td width="25%"><img src="images/firmware-2/phone-setup.png" alt="Setup page on a phone with the network list and join form"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Cards</b></td>
+    <td align="center"><b>Analysis</b></td>
+    <td align="center"><b>Decode</b></td>
+    <td align="center"><b>Setup</b></td>
+  </tr>
+</table>
+
+More on 2.0.0:
+
+- [The Doppelgänger web interface](https://physicalexploit.com/blog/doppelganger-web-interface), a tour of every page
+- [Doppelgänger Core and Stealth: boards and firmware](https://physicalexploit.com/blog/doppelganger-reader-firmware)
+- [Reader documentation](https://atlas.mwgroup.io/hardware/longrange/setup/)
+
+## Open Source Version
 
 - Version: 1.2.3
 - Build Date: 10JAN2026
@@ -250,7 +310,7 @@ ATLAS provides advanced features including:
 
 ## Updating Firmware
 
-There are three supported ways to update the firmware on Doppelgänger Core.
+To install firmware 2.0.0 or later, use the [browser flasher](https://atlas.mwgroup.io/flash/). The three ways below apply to the open source firmware in this repository, 1.2.3 and earlier.
 
 ### Option 1: Use prebuilt installers from Releases (recommended)
 
