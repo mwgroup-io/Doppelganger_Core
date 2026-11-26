@@ -10,7 +10,7 @@ Doppelgänger Core is a professional-grade RFID card cloning and analysis tool d
 
 Doppelgänger Core firmware is closed source from version 2.0.0 forward. It is published as a signed release and installed with the browser flasher. It is not built from this repository.
 
-**[Open the browser flasher](https://atlas.mwgroup.io/flash/)** to install 2.0.0 on a Core over a USB-C cable, from Chrome or Edge on a computer. Nothing is installed on the computer, and the reader keeps its settings and every card it has captured. The [flashing guide](https://atlas.mwgroup.io/hardware/core-flashing/) walks through it, and covers updating from [Doppelgänger ATLAS](https://atlas.mwgroup.io/) as well.
+**[Open the browser flasher](https://atlas.mwgroup.io/flash/)** to install 2.0.0 on a Core over a USB-C cable, from Chrome or Edge on a computer. Nothing is installed on the computer, and the reader keeps its settings and every card it has captured. The flashing guides walk through it, and cover updating from [Doppelgänger ATLAS](https://atlas.mwgroup.io/) as well: [Flashing and Updating](https://physicalexploit.com/docs/products/code/flashing_firmware/) in the Practical Physical Exploitation product documentation, and [Core flashing](https://atlas.mwgroup.io/hardware/core-flashing/) in the ATLAS documentation.
 
 This repository stays public as the open source line, 1.2.3 and earlier, for anyone who wants to build their own firmware for the Doppelgänger RFID Development Board. Everything below the screenshots describes that source and is kept as it was.
 
@@ -60,11 +60,29 @@ The reader serves its own pages to any browser, on a computer or a phone, with n
   </tr>
 </table>
 
-More on 2.0.0:
+### Documentation
+
+Firmware 2.0.0 is documented in two places, and each covers its own ground.
+
+**Practical Physical Exploitation product documentation**, for the hardware and the firmware by itself:
+
+- [Doppelgänger Core](https://physicalexploit.com/docs/products/code/doppelganger_core/): the firmware, its setup page, and every tab and setting of the web interface
+- [Flashing and Updating](https://physicalexploit.com/docs/products/code/flashing_firmware/)
+- [Doppelgänger RFID Development Board](https://physicalexploit.com/docs/products/rfid/doppelganger_development_board/)
+- [Wiring Guide](https://physicalexploit.com/docs/products/rfid/wiring-guide/)
+- [Card Formats](https://physicalexploit.com/docs/products/code/card_formats/)
+- [Getting Started](https://physicalexploit.com/docs/products/getting-started/), the index of every product
+
+**Doppelgänger ATLAS documentation**, for using the reader with ATLAS:
+
+- [Long range reader setup](https://atlas.mwgroup.io/hardware/longrange/setup/)
+- [Core flashing](https://atlas.mwgroup.io/hardware/core-flashing/), from ATLAS or from a computer
+- [Readers over Bluetooth](https://atlas.mwgroup.io/hardware/reader-bluetooth/)
+
+**From the blog:**
 
 - [The Doppelgänger web interface](https://physicalexploit.com/blog/doppelganger-web-interface), a tour of every page
 - [Doppelgänger Core and Stealth: boards and firmware](https://physicalexploit.com/blog/doppelganger-reader-firmware)
-- [Reader documentation](https://atlas.mwgroup.io/hardware/longrange/setup/)
 
 ## Open Source Version
 
